@@ -1,4 +1,4 @@
-#include "AMASPSerial.h"
+#include "AMASP.h"
 
 AMASPSerialMaster com;
 void setup() {

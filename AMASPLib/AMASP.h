@@ -1,10 +1,10 @@
 /*
-  AMASPSerial.h - Library that implements the AMASP - ASCII Master Slave Protocol (version 0.4).
+  AMASP.h - Library that implements the AMASP - ASCII Master Slave Protocol (version 0.4).
   Created by Andre Luiz Delai, November 17, 2017.
-  Released into the public domain.
+  
 */
-#ifndef AMASPSerial_h
-#define AMASPSerial_h
+#ifndef AMASP_h
+#define AMASP_h
 
 #include "Arduino.h"
 
