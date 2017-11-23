@@ -1,12 +1,15 @@
 /*
   AMASP.h - Library that implements the AMASP - ASCII Master Slave Protocol (version 0.4).
   Created by Andre Luiz Delai, November 17, 2017.
-  
 */
 #ifndef AMASP_h
 #define AMASP_h
 
 #include "Arduino.h"
+
+#define MSGMAXSIZE 128;
+
+enum PacketType{MRP, SRP, SIP, CEP, None};
 
 class AMASPSerialMaster
 {
@@ -14,7 +17,9 @@ class AMASPSerialMaster
     AMASPSerialMaster();
     void begin(HardwareSerial *serial);
     void end();
-    int sendRequisition(int deviceID, byte* message, int msgLength);
+    int sendRequisition(int deviceID, byte message[], int msgLength);
+    void sendError(int code);
+    PacketType readPacket(int *deviceID, byte message[], int *msgLength);
     
   private:
 };
@@ -23,15 +28,17 @@ class AMASPSerialSlave
 {
   public:
     AMASPSerialSlave();
-    void begin(int portNumber);
+    void begin(HardwareSerial *serial);
     void end();
-    bool sendResponse(int deviceID, byte* message, int msgLength);
-    bool sendInterruption(int code);
-    bool sendError(int code);
+    void sendResponse(int deviceID, byte* message, int msgLength);
+    void sendInterruption(int code);
+    void sendError(int code);
+    void readPacket(PacketType *type, int *deviceID, byte message[], int *msgLength);
 
   private:   
 };
 
+//Auxiliary functions
 void intToASCIIHex(int value, unsigned char hex[]);
 
 int asciiHexToInt(unsigned char hex[]);

@@ -51,3 +51,56 @@ int AMASPSerialMaster::sendRequisition(int deviceID, byte message[], int msgLeng
   masterCom->write(pkt, 14 + msgLength);
   delete pkt;
 }
+
+void AMASPSerialMaster::sendError(int errorCode)
+{
+  char hex[sizeof(int) * 2];
+  byte pkt[10];
+  pkt[0] = '!';
+  pkt[1] = '~';
+  intToASCIIHex(errorCode, hex);
+  pkt[2] = hex[1];
+  pkt[3] = hex[0];
+  intToASCIIHex(LRC(pkt, 4), hex);
+  pkt[4] = hex[3];
+  pkt[5] = hex[2];
+  pkt[6] = hex[1];
+  pkt[7] = hex[0];
+  pkt[8] = '\r';
+  pkt[9] = '\n';
+
+  masterCom->write(pkt, 10);
+}
+
+PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *codeLength)
+{
+  byte buf[4];
+  PacketType type;
+  if (masterCom->read() == '!')
+  {
+    buf[0] = masterCom->read();
+    switch (buf[0])
+    {
+      case '#':
+        type = SRP;
+        masterCom->readBytes(buf, 3);
+        *deviceID = asciiHexToInt(buf);
+        masterCom->readBytes(buf, 3);
+        *codeLength = asciiHexToInt(buf);
+        break;
+      case '!':
+        type = SIP;
+        break;
+      case '~':
+        type = CEP;
+        break;
+      default:
+        break;
+    }
+
+    return type;
+  }
+
+
+
+}

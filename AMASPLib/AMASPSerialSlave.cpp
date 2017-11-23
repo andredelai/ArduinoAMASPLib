@@ -8,4 +8,16 @@ AMASPSerialSlave::AMASPSerialSlave()
   
 }
 
+void AMASPSerialSlave::begin(HardwareSerial *serial)
+{
+    
+}
+
+void AMASPSerialSlave::end()
+{
+  
+}
+
+
+
 

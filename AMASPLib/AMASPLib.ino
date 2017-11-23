@@ -1,4 +1,5 @@
 #include "AMASP.h"
+#include "Arduino.h"
 
 AMASPSerialMaster com;
 void setup() {
@@ -12,6 +13,7 @@ void setup() {
     com.sendRequisition(0x0FDA, data, 4);
   }
 }
+
 
 void loop() {
   // put your main code here, to run repeatedly:
