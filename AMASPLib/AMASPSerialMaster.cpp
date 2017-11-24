@@ -83,26 +83,38 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
     switch (buf[1])
     {
       //SRP
-      case '#':
+      case '#':    
         
-        
-        aux = asciiHexToInt(&buf[5], 3);
-        
-        type = SRP;
-        masterCom->readBytes(buf, 3);
-        *deviceID = asciiHexToInt(buf);
-        masterCom->readBytes(buf, 3);
-        //*codeLength = asciiHexToInt(buf, );
         break;
       //SIP
       case '!':
-        type = SIP;
+        aux = asciiHexToInt(&buf[7], 4);
+        if(LRC(buf, 13) == aux)
+        {
+          type = SIP;
+          *deviceID = asciiHexToInt(&buf[2],3);
+          *codeLength = asciiHexToInt(&buf[5],3);
+        }
+        else
+        {
+          type = None;
+        }
         break;
       //CEP
       case '~':
-        type = CEP;
+        aux = asciiHexToInt(&buf[4], 4);
+        if(LRC(buf, 13) == aux)
+        {
+          type = CEP;
+          *codeLength = asciiHexToInt(&buf[2],2);
+        }
+        else
+        {
+          type = None;
+        }
         break;
       default:
+          type = None;
         break;
     }
     return type;
