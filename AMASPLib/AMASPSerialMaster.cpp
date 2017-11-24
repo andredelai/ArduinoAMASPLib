@@ -74,33 +74,39 @@ void AMASPSerialMaster::sendError(int errorCode)
 
 PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *codeLength)
 {
-  byte buf[4];
+  byte buf[SERIAL_RX_BUFFER_SIZE];
   PacketType type;
-  if (masterCom->read() == '!')
+  int aux;
+  if (masterCom->peek() == '!')
   {
-    buf[0] = masterCom->read();
-    switch (buf[0])
+    masterCom->readBytesUntil('\n', buf, SERIAL_RX_BUFFER_SIZE);
+    switch (buf[1])
     {
+      //SRP
       case '#':
+        
+        
+        aux = asciiHexToInt(&buf[5], 3);
+        
         type = SRP;
         masterCom->readBytes(buf, 3);
         *deviceID = asciiHexToInt(buf);
         masterCom->readBytes(buf, 3);
-        *codeLength = asciiHexToInt(buf);
+        //*codeLength = asciiHexToInt(buf, );
         break;
+      //SIP
       case '!':
         type = SIP;
         break;
+      //CEP
       case '~':
         type = CEP;
         break;
       default:
         break;
     }
-
     return type;
   }
 
-
-
+  
 }

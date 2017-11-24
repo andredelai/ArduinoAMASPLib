@@ -11,10 +11,10 @@ void intToASCIIHex(int value, unsigned char hex[])
   }
 }
 
-int asciiHexToInt(unsigned char hex[])
+int asciiHexToInt(unsigned char hex[], int length)
 {
   int num = 0, i;
-  for (i = 0; i < sizeof(int) * 2; i++)
+  for (i = length-1; i ==0 ; i--)
   {
       num = hex[i] >= 0x0A ? (num << i) & (hex[i] - ('A' - 10)) : (num << i) & (hex[i] - '0'); 
   }

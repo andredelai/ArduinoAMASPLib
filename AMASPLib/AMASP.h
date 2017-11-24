@@ -41,7 +41,7 @@ class AMASPSerialSlave
 //Auxiliary functions
 void intToASCIIHex(int value, unsigned char hex[]);
 
-int asciiHexToInt(unsigned char hex[]);
+int asciiHexToInt(unsigned char hex[], int length);
 
 int LRC(byte* data, int dataLength);
 
