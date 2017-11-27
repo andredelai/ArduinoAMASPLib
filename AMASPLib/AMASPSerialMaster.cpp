@@ -76,42 +76,39 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
 {
   byte buf[SERIAL_RX_BUFFER_SIZE];
   PacketType type;
+  byte *endPktPtr;
   int aux;
+  
   if (masterCom->peek() == '!')
   {
     masterCom->readBytesUntil('\n', buf, SERIAL_RX_BUFFER_SIZE);
+    endPktPtr = memchr(buf,'\n',SERIAL_RX_BUFFER_SIZE);
+    aux = asciiHexToInt(endPktPtr-5,4);
+    if(aux != LRC (buf, (endPktPtr - buf) + 1))
+    {
+      return None;
+    }  
     switch (buf[1])
     {
       //SRP
       case '#':    
-        
-        break;
+      //Calculating message length
+      aux = asciiHexToInt(&buf[5], 3);
+      break;
       //SIP
       case '!':
-        aux = asciiHexToInt(&buf[7], 4);
-        if(LRC(buf, 13) == aux)
-        {
+      {
           type = SIP;
           *deviceID = asciiHexToInt(&buf[2],3);
           *codeLength = asciiHexToInt(&buf[5],3);
-        }
-        else
-        {
-          type = None;
-        }
+      }
         break;
-      //CEP
+      //CEP'
       case '~':
         aux = asciiHexToInt(&buf[4], 4);
-        if(LRC(buf, 13) == aux)
-        {
-          type = CEP;
-          *codeLength = asciiHexToInt(&buf[2],2);
-        }
-        else
-        {
-          type = None;
-        }
+        type = CEP;
+        *codeLength = asciiHexToInt(&buf[2],2);
+        type = None;
         break;
       default:
           type = None;
