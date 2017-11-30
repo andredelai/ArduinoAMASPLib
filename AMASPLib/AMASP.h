@@ -7,9 +7,9 @@
 
 #include "Arduino.h"
 
-#define MSGMAXSIZE 128;
+#define MSGMAXSIZE 128
 
-enum PacketType{MRP, SRP, SIP, CEP, None};
+enum PacketType{MRP, SRP, SIP, CEP, Unknown};
 
 class AMASPSerialMaster
 {

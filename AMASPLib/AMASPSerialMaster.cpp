@@ -1,6 +1,8 @@
 #include "Arduino.h"
 #include "AMASP.h"
 
+#define PKTMAXSIZE MSGMAXSIZE + 14
+
 HardwareSerial *masterCom;
 
 AMASPSerialMaster::AMASPSerialMaster()
@@ -74,15 +76,21 @@ void AMASPSerialMaster::sendError(int errorCode)
 
 PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *codeLength)
 {
-  byte buf[SERIAL_RX_BUFFER_SIZE];
+  byte buf[PKTMAXSIZE];
   PacketType type;
   byte *endPktPtr;
   int aux;
   
   if (masterCom->peek() == '!')
   {
-    masterCom->readBytesUntil('\n', buf, SERIAL_RX_BUFFER_SIZE);
-    endPktPtr = memchr(buf,'\n',SERIAL_RX_BUFFER_SIZE);
+    
+    //masterCom->readBytesUntil('\n', buf, PKTMAXSIZE);
+    //endPktPtr = memchr(buf,'\n',PKTMAXSIZE);
+    if(masterCom->available()<13)
+    {
+      return Unknown;
+    }
+    
     aux = asciiHexToInt(endPktPtr-5,4);
     if(aux != LRC (buf, (endPktPtr - buf) + 1))
     {
@@ -91,7 +99,8 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
     switch (buf[1])
     {
       //SRP
-      case '#':    
+      case '#':
+      masterCom->ReadBytes(    
       //Calculating message length
       aux = asciiHexToInt(&buf[5], 3);
       break;
