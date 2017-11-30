@@ -7,9 +7,9 @@
 
 #include "Arduino.h"
 
-#define MSGMAXSIZE 128
+#define MSGMAXSIZE 256
 
-enum PacketType{MRP, SRP, SIP, CEP, Unknown};
+enum PacketType{MRP, SRP, SIP, CEP, None, Error};
 
 class AMASPSerialMaster
 {
@@ -18,7 +18,7 @@ class AMASPSerialMaster
     void begin(HardwareSerial *serial);
     void end();
     int sendRequisition(int deviceID, byte message[], int msgLength);
-    void sendError(int code);
+    void sendError(int device, int errorCode);
     PacketType readPacket(int *deviceID, byte message[], int *msgLength);
     
   private:
