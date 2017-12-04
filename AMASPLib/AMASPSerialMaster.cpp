@@ -22,55 +22,71 @@ void AMASPSerialMaster::end()
 
 int AMASPSerialMaster::sendRequisition(int deviceID, byte message[], int msgLength)
 {
-  char hexa[sizeof(int) * 2];
+  char hex[sizeof(int) * 2];
 
   //mounting the packet
   byte pkt[PKTMAXSIZE];
   //byte* pkt = new byte[14 + msgLength];
 
+  //Packet Type
   pkt[0] = '!';
   pkt[1] = '?';
-  intToASCIIHex(deviceID, hexa);
-  pkt[2] = hexa[2];
-  pkt[3] = hexa[1];
-  pkt[4] = hexa[0];
-  intToASCIIHex(msgLength, hexa);
-  pkt[5] = hexa[2];
-  pkt[6] = hexa[1];
-  pkt[7] = hexa[0];
+  //Device ID
+  intToASCIIHex(deviceID, hex);
+  pkt[2] = hex[2];
+  pkt[3] = hex[1];
+  pkt[4] = hex[0];
+  //Message Length
+  intToASCIIHex(msgLength, hex);
+  pkt[5] = hex[2];
+  pkt[6] = hex[1];
+  pkt[7] = hex[0];
+  //Message (payload)
   for (int i = 0; i < msgLength ; i++)
   {
     pkt[8 + i] = message[i];
   }
-  intToASCIIHex(LRC(pkt, 5 + msgLength + 3), hexa);
-  pkt[8 + msgLength] = hexa[3];
-  pkt[8 + msgLength + 1] = hexa[2];
-  pkt[8 + msgLength + 2] = hexa[1];
-  pkt[8 + msgLength + 3] = hexa[0];
+  //LRC
+  intToASCIIHex(LRC(pkt, 5 + msgLength + 3), hex);
+  pkt[8 + msgLength] = hex[3];
+  pkt[8 + msgLength + 1] = hex[2];
+  pkt[8 + msgLength + 2] = hex[1];
+  pkt[8 + msgLength + 3] = hex[0];
+  //Packet End
   pkt[8 + msgLength + 4] = '\r';
   pkt[8 + msgLength + 5] = '\n';
 
   //sending requisition
   masterCom->write(pkt, 14 + msgLength);
-  
+
 }
 
-void AMASPSerialMaster::sendError(int device, int errorCode)
+void AMASPSerialMaster::sendError(int deviceID, int errorCode)
 {
   char hex[sizeof(int) * 2];
-  byte pkt[10];
+  byte pkt[13];
+
+  //Packet Type
   pkt[0] = '!';
   pkt[1] = '~';
+  //Device ID
+  intToASCIIHex(deviceID, hex);
+  pkt[2] = hex[2];
+  pkt[3] = hex[1];
+  pkt[4] = hex[0];
+  //Error Code
   intToASCIIHex(errorCode, hex);
-  pkt[2] = hex[1];
-  pkt[3] = hex[0];
+  pkt[5] = hex[1];
+  pkt[6] = hex[0];
+  //LRC
   intToASCIIHex(LRC(pkt, 4), hex);
-  pkt[4] = hex[3];
-  pkt[5] = hex[2];
-  pkt[6] = hex[1];
-  pkt[7] = hex[0];
-  pkt[8] = '\r';
-  pkt[9] = '\n';
+  pkt[7] = hex[3];
+  pkt[8] = hex[2];
+  pkt[9] = hex[1];
+  pkt[10] = hex[0];
+  //Packet End
+  pkt[11] = '\r';
+  pkt[12] = '\n';
 
   masterCom->write(pkt, 10);
 }
@@ -83,77 +99,122 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
   byte *endPktPtr;
   int aux;
 
-  while (masterCom->readBytes(buf, 1) != 0 && keepReading == true)
+  //Searching for a packet in serial buffer (starts with !).
+  while (masterCom->readBytes(buf, 1) != 0)
   {
     if (buf[0] == '!')
     {
-      //Reading pkt type and device ID
-      masterCom->readBytes(&buf[1], 4);
-
+      //Reading packet type
+      if (masterCom->readBytes(&buf[1], 1) != 1)
+      {
+        return Timeout;
+      }
       //Verifing type
       switch (buf[1])
       {
-        //SRP
+        //SRP Packet
         case '#':
-          //Reading msg length
-          masterCom->readBytes(&buf[5], 3);
-          //Reading message length
-          *codeLength = asciiHexToInt(&buf[5], 3);
-          //Reading message, LRC and end packet chars
-          masterCom->readBytes(&buf[8], *codeLength + 6);
-          //LRC checking
-          aux = asciiHexToInt(&buf[aux + 9], 4);
-          if (aux != LRC(&buf[aux + 9], 4))
+          //Reading device ID and msg length
+          if (masterCom->readBytes(&buf[2], 6) == 6)
           {
-            return Error;
+            //Extracting device ID
+            if (*deviceID = asciiHexToInt(&buf[2], 3) != -1)
+            {
+              //Extracting message length
+              if (*codeLength = asciiHexToInt(&buf[5], 3) != -1)
+              {
+                if (codeLength > MSGMAXSIZE)
+                {
+                  return Error;
+                }
+                //Extracting message, LRC and end packet chars
+                if (masterCom->readBytes(&buf[8], *codeLength + 6) == *codeLength + 6)
+                {
+                  //LRC checking
+                  aux = asciiHexToInt(&buf[aux + 9], 4);
+                  if (aux == LRC(&buf[aux + 9], 4))
+                  {
+                    //Checking the packet end
+                    if (buf[*codeLength + 13] == '\r' ||  buf[*codeLength + 14] == '\n')
+                    {
+                      //Extracting message
+                      memcpy(message, &buf[8], *codeLength);
+                      return SRP;
+                    }
+                  }
+                }
+                else
+                {
+                  return Timeout;
+                }
+              }
+            }
           }
-          *deviceID = asciiHexToInt(&buf[2], 3);
-          memcpy(message, &buf[8], *codeLength);
-          if (buf[aux + 13] != '\r' ||  buf[aux + 14] != '\n')
+          else
           {
-            return None;
+            return Timeout;
           }
-          return SRP;
           break;
 
+        //SIP Packet
         case '!':
-          aux = asciiHexToInt(&buf[4], 4);
-          if (aux != LRC(&buf[aux + 8], 4))
+          if (masterCom->readBytes(&buf[2], 11) != 11)
           {
-            return Error;
+            return Timeout;
           }
-          //Reading device ID
-          *deviceID = asciiHexToInt(&buf[2], 3);
-          //Reading interrupt code
-          *codeLength = asciiHexToInt(&buf[5], 2);
-          if (buf[aux + 11] != '\r' ||  buf[12] != '\n')
+          if (aux = asciiHexToInt(&buf[4], 4) != -1)
           {
-            return Error;
+            if (aux == LRC(&buf[aux + 8], 4))
+            {
+              //Reading device ID
+              if (*deviceID = asciiHexToInt(&buf[2], 3) != -1)
+              {
+                //Reading interrupt code
+                if (*codeLength = asciiHexToInt(&buf[5], 2) != -1)
+                {
+                  //Checking the packet end
+                  if (buf[aux + 11] == '\r' ||  buf[12] == '\n')
+                  {
+                    return SIP;
+                  }
+                }
+              }
+            }
           }
-          return SIP;
           break;
 
+        //CEP Packet
         case '~':
-          //LRC checking
-          aux = asciiHexToInt(&buf[4], 4);
-          if (aux != LRC(&buf[aux + 8], 4))
+          if (masterCom->readBytes(&buf[2], 11) != 11)
           {
-            return Error;
+            return Timeout;
           }
-          //Reading device ID
-          *deviceID = asciiHexToInt(&buf[2], 3);
-          //Reading error code
-          *codeLength = asciiHexToInt(&buf[5], 2);
-          if (buf[aux + 11] != '\r' ||  buf[12] != '\n')
+          if (aux = asciiHexToInt(&buf[4], 4) != -1)
           {
-            return Error;
+            if (aux == LRC(&buf[aux + 8], 4))
+            {
+              //Reading device ID
+              if (*deviceID = asciiHexToInt(&buf[2], 3) != -1)
+              {
+                //Reading error code
+                if (*codeLength = asciiHexToInt(&buf[5], 2) != -1)
+                {
+                  if (buf[aux + 11] == '\r' ||  buf[12] == '\n')
+                  {
+                    return SIP;
+                  }
+                }
+              }
+            }
           }
-          return CEP;
           break;
 
+        default:
+          //It´s not a valid packet, the search continues...
+          break;
       }
     }
   }
-  return None;
+  return Timeout;
 }
 

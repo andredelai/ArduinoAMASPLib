@@ -7,17 +7,29 @@ void intToASCIIHex(int value, unsigned char hex[])
   for (i = 0; i < sizeof(int) * 2; i++)
   {
     hex[i] = (value >> (i * 4)) & 0x0F;
-    hex[i] += hex[i] >= 0x0A ? ('A' - 10): '0';
+    hex[i] += hex[i] >= 0x0A ? ('A' - 10) : '0';
   }
 }
 
-int asciiHexToInt(unsigned char hex[], int length)
+long asciiHexToInt(unsigned char hex[], int length)
 {
-  int num = 0, i;
-  for (i = length-1; i ==0 ; i--)
+  long num = 0, i;
+
+  for (i = 0; i < length  ; i++)
   {
-      num = hex[i] >= 0x0A ? (num << i) & (hex[i] - ('A' - 10)) : (num << i) & (hex[i] - '0'); 
+    //Avoiding lowcase
+    hex[i] = toupper(hex[i]);
+    if (((hex[i] >= '0') && (hex[i] <= '9')) || ((hex[i] >= 'A') && (hex[i] <= 'F')))
+    {
+      num = hex[i] >= 'A' ? (num << 4) | (hex[i] - ('A' - 0x0A)) : (num << 4) | (hex[i] - '0');
+    }
+    else
+    {
+      //The string is not hexadecimal.
+      return -1;
+    }
   }
+  return num;
 }
 
 int LRC(byte* data, int dataLength)

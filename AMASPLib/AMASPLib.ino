@@ -1,18 +1,21 @@
 #include "AMASP.h"
 #include "Arduino.h"
 
-AMASPSerialMaster com;
+//AMASPSerialMaster com;
 void setup() {
   // put your setup code here, to run once:
-  int device;
+  long device;
   int codeLength;
   Serial.begin(9600);
-  com.begin(&Serial);
-  byte data[]{'X','X','X','X'};
-  delay(2000);
-  com.sendRequisition(0x0FDA, data, 4);
-  com.readPacket(&device, data, &codeLength);
-  
+  //com.begin(&Serial);
+  byte data[]{'F','0','0','0'};
+  //delay(2000);
+
+  device = asciiHexToInt(data, 4);
+  //Serial.println();
+  Serial.println(device);
+  //com.sendRequisition(0x0FDA, data, 4);
+  //com.readPacket(&device, data, &codeLength);
 }
 
 

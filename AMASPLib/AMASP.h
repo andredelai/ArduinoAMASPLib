@@ -9,7 +9,7 @@
 
 #define MSGMAXSIZE 256
 
-enum PacketType{MRP, SRP, SIP, CEP, None, Error};
+enum PacketType{MRP, SRP, SIP, CEP, Timeout, Error};
 
 class AMASPSerialMaster
 {
@@ -41,7 +41,7 @@ class AMASPSerialSlave
 //Auxiliary functions
 void intToASCIIHex(int value, unsigned char hex[]);
 
-int asciiHexToInt(unsigned char hex[], int length);
+long asciiHexToInt(unsigned char hex[], int length);
 
 int LRC(byte* data, int dataLength);
 
