@@ -8,8 +8,9 @@
 #include "Arduino.h"
 
 #define MSGMAXSIZE 256
+#define PKTMAXSIZE MSGMAXSIZE + 14
 
-enum PacketType{MRP, SRP, SIP, CEP, Timeout, Error};
+enum PacketType {MRP, SRP, SIP, CEP, Timeout, Error};
 
 class AMASPSerialMaster
 {
@@ -19,9 +20,10 @@ class AMASPSerialMaster
     void end();
     int sendRequisition(int deviceID, byte message[], int msgLength);
     void sendError(int device, int errorCode);
-    PacketType readPacket(int *deviceID, byte message[], int *msgLength);
-    
+    PacketType readPacket(int *deviceID, byte message[], int *codeLength);
+
   private:
+
 };
 
 class AMASPSerialSlave
@@ -30,12 +32,13 @@ class AMASPSerialSlave
     AMASPSerialSlave();
     void begin(HardwareSerial *serial);
     void end();
-    void sendResponse(int deviceID, byte* message, int msgLength);
-    void sendInterruption(int code);
-    void sendError(int code);
-    void readPacket(PacketType *type, int *deviceID, byte message[], int *msgLength);
+    void sendResponse(int deviceID, byte message[], int msgLength);
+    void sendInterruption(int deviceID, int code);
+    void sendError(int Device, int code);
+    PacketType readPacket(int *deviceID, byte message[], int *codeLength);
 
-  private:   
+  private:
+   
 };
 
 //Auxiliary functions
@@ -43,6 +46,6 @@ void intToASCIIHex(int value, unsigned char hex[]);
 
 long asciiHexToInt(unsigned char hex[], int length);
 
-int LRC(byte* data, int dataLength);
+long LRC(byte* data, int dataLength);
 
 #endif

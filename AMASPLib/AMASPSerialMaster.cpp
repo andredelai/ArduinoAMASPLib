@@ -1,9 +1,7 @@
 #include "Arduino.h"
 #include "AMASP.h"
 
-#define PKTMAXSIZE MSGMAXSIZE + 14
-
-HardwareSerial *masterCom;
+HardwareSerial *masterCom = NULL;
 
 AMASPSerialMaster::AMASPSerialMaster()
 {
@@ -47,7 +45,7 @@ int AMASPSerialMaster::sendRequisition(int deviceID, byte message[], int msgLeng
     pkt[8 + i] = message[i];
   }
   //LRC
-  intToASCIIHex(LRC(pkt, 5 + msgLength + 3), hex);
+  intToASCIIHex(LRC(pkt, msgLength + 8), hex);
   pkt[8 + msgLength] = hex[3];
   pkt[8 + msgLength + 1] = hex[2];
   pkt[8 + msgLength + 2] = hex[1];
@@ -79,7 +77,7 @@ void AMASPSerialMaster::sendError(int deviceID, int errorCode)
   pkt[5] = hex[1];
   pkt[6] = hex[0];
   //LRC
-  intToASCIIHex(LRC(pkt, 4), hex);
+  intToASCIIHex(LRC(pkt, 7), hex);
   pkt[7] = hex[3];
   pkt[8] = hex[2];
   pkt[9] = hex[1];
@@ -88,7 +86,7 @@ void AMASPSerialMaster::sendError(int deviceID, int errorCode)
   pkt[11] = '\r';
   pkt[12] = '\n';
 
-  masterCom->write(pkt, 10);
+  masterCom->write(pkt, 13);
 }
 
 PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *codeLength)
@@ -102,11 +100,14 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
   //Searching for a packet in serial buffer (starts with !).
   while (masterCom->readBytes(buf, 1) != 0)
   {
+    masterCom->print("read");
     if (buf[0] == '!')
     {
+      masterCom->print("!");
       //Reading packet type
       if (masterCom->readBytes(&buf[1], 1) != 1)
       {
+        masterCom->print("timeout");
         return Timeout;
       }
       //Verifing type
@@ -215,6 +216,7 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
       }
     }
   }
+  masterCom->print("timeout");
   return Timeout;
 }
 

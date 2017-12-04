@@ -32,9 +32,9 @@ long asciiHexToInt(unsigned char hex[], int length)
   return num;
 }
 
-int LRC(byte* data, int dataLength)
+long LRC(byte* data, int dataLength)
 {
-  int lrc = 0;
+  long lrc = 0;
   for (int i = 0; i < dataLength; i++)
   {
     lrc = (lrc + data[i]) & 0xFFFF;
