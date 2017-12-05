@@ -15,11 +15,11 @@ void AMASPSerialSlave::begin(HardwareSerial *serial)
 
 void AMASPSerialSlave::end()
 {
-  if(slaveCom != NULL)
+  if (slaveCom != NULL)
   {
     slaveCom->end();
   }
-  
+
 }
 
 void AMASPSerialSlave::sendResponse(int deviceID, byte message[], int msgLength)
@@ -136,7 +136,6 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
   {
     if (buf[0] == '!')
     {
-      //slaveCom->print("found ! ");
       //Reading packet type
       if (slaveCom->readBytes(&buf[1], 1) != 1)
       {
@@ -145,23 +144,19 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
       //Verifing type
       switch (buf[1])
       {
-        //SRP Packet
+        //SRP Packet******
         case '?':
-        //slaveCom->print("found ? ");
           //Reading device ID and msg length
           if (slaveCom->readBytes(&buf[2], 6) == 6)
           {
-            //slaveCom->write(&buf[0], 8);
             //Extracting device ID
             *deviceID = asciiHexToInt(&buf[2], 3);
             if (*deviceID != -1)
             {
-              //slaveCom->print(*deviceID);
               //Extracting message length
               *codeLength = asciiHexToInt(&buf[5], 3);
               if (*codeLength != -1)
               {
-                //slaveCom->print(asciiHexToInt(&buf[5], 3));
                 if (*codeLength > MSGMAXSIZE)
                 {
                   //slaveCom->print("msgMaxSize");
@@ -172,15 +167,11 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
                 {
                   //LRC checking
                   aux = asciiHexToInt(&buf[(*codeLength) + 8], 4);
-                  //slaveCom->print(aux,HEX);
-                  //slaveCom->print(LRC(buf, (*codeLength) + 8), HEX);
                   if (aux == LRC(buf, (*codeLength) + 8))
                   {
-                    //slaveCom->print("LRC_OK");
                     //Checking the packet end
                     if (buf[*codeLength + 12] == '\r' ||  buf[*codeLength + 13] == '\n')
                     {
-                      slaveCom->print("CRLF_OK");
                       //Extracting message
                       memcpy(message, &buf[8], *codeLength);
                       return MRP;
@@ -200,24 +191,28 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
           }
           break;
 
-        //SIP Packet
+        //SIP Packet******
         case '!':
           if (slaveCom->readBytes(&buf[2], 11) != 11)
           {
             return Timeout;
           }
-          if (aux = asciiHexToInt(&buf[4], 4) != -1)
+          aux = asciiHexToInt(&buf[4], 4);
+          if (aux != -1)
           {
+            //LRC check
             if (aux == LRC(&buf[aux + 8], 4))
             {
-              //Reading device ID
-              if (*deviceID = asciiHexToInt(&buf[2], 3) != -1)
+              //Extracting device ID
+              *deviceID = asciiHexToInt(&buf[2], 3);
+              if (*deviceID != -1)
               {
                 //Reading interrupt code
-                if (*codeLength = asciiHexToInt(&buf[5], 2) != -1)
+                *codeLength = asciiHexToInt(&buf[5], 2);
+                if (*codeLength != -1)
                 {
                   //Checking the packet end
-                  if (buf[aux + 11] == '\r' ||  buf[12] == '\n')
+                  if (buf[11] == '\r' ||  buf[12] == '\n')
                   {
                     return SIP;
                   }
@@ -227,23 +222,26 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
           }
           break;
 
-        //CEP Packet
+        //CEP Packet*****
         case '~':
           if (slaveCom->readBytes(&buf[2], 11) != 11)
           {
             return Timeout;
           }
-          if (aux = asciiHexToInt(&buf[4], 4) != -1)
+          aux = asciiHexToInt(&buf[4], 4);
+          if (aux != -1)
           {
             if (aux == LRC(&buf[aux + 8], 4))
             {
               //Reading device ID
-              if (*deviceID = asciiHexToInt(&buf[2], 3) != -1)
+              *deviceID = asciiHexToInt(&buf[2], 3);
+              if (*deviceID != -1)
               {
                 //Reading error code
-                if (*codeLength = asciiHexToInt(&buf[5], 2) != -1)
+                *codeLength = asciiHexToInt(&buf[5], 2);
+                if (*codeLength != -1)
                 {
-                  if (buf[aux + 11] == '\r' ||  buf[12] == '\n')
+                  if (buf[11] == '\r' ||  buf[12] == '\n')
                   {
                     return SIP;
                   }
