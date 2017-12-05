@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "AMASP.h"
 
-void intToASCIIHex(int value, unsigned char hex[])
+void intToASCIIHex(int value, char hex[])
 {
   int i;
   for (i = 0; i < sizeof(int) * 2; i++)
@@ -11,7 +11,7 @@ void intToASCIIHex(int value, unsigned char hex[])
   }
 }
 
-long asciiHexToInt(unsigned char hex[], int length)
+long asciiHexToInt(char hex[], int length)
 {
   long num = 0, i;
 

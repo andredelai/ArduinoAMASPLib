@@ -142,7 +142,7 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
                         {
                           //Extracting message
                           memcpy(message, &buf[8], *codeLength);
-                          return MRP;
+                          return SRP;//MRP recognized
                         }
                       }
                     }
@@ -186,7 +186,7 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
                   //Checking the packet end
                   if (buf[11] == '\r' ||  buf[12] == '\n')
                   {
-                    return SIP;
+                    return SIP; //SIP recognized
                   }
                 }
               }
@@ -217,7 +217,7 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
                   //Checking the packet end
                   if (buf[11] == '\r' ||  buf[12] == '\n')
                   {
-                    return CEP;
+                    return CEP; //CEP recognized
                   }
                 }
               }

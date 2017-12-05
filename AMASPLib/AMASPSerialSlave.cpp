@@ -8,9 +8,9 @@ AMASPSerialSlave::AMASPSerialSlave()
 
 }
 
-void AMASPSerialSlave::begin(HardwareSerial *serial)
+void AMASPSerialSlave::begin(HardwareSerial &serial)
 {
-  slaveCom = serial;
+  slaveCom = &serial;
 }
 
 void AMASPSerialSlave::end()
@@ -172,7 +172,7 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
                       {
                         //Extracting message
                         memcpy(message, &buf[8], *codeLength);
-                        return MRP;
+                        return MRP;//MRP recognized
                       }
                     }
                   }
@@ -215,7 +215,7 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
                   //Checking the packet end
                   if (buf[11] == '\r' ||  buf[12] == '\n')
                   {
-                    return CEP;
+                    return CEP; //CEP recognized
                   }
                 }
               }

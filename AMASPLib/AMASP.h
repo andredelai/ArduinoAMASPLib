@@ -26,6 +26,10 @@
 #define PKTMAXSIZE MSGMAXSIZE + 14 //Maximum packet size in bytes.
 
 //AMASP Packet types returned by readPacket function.
+//MRP - Master Requisition Packet
+//SRP - Slave Response Packet
+//SIP - Slave Interrupt Packet
+//CEP - Communication Error Packet
 enum PacketType {MRP = 0, SRP, SIP, CEP, Timeout};
 
 //Serial Master class
@@ -48,7 +52,7 @@ class AMASPSerialSlave
 {
   public:
     AMASPSerialSlave();
-    void begin(HardwareSerial *serial);
+    void begin(HardwareSerial &serial);
     void end();
     void sendResponse(int deviceID, byte message[], int msgLength);
     void sendInterruption(int deviceID, int code);
@@ -60,9 +64,9 @@ class AMASPSerialSlave
 };
 
 //Auxiliary functions***********
-void intToASCIIHex(int value, unsigned char hex[]);
+void intToASCIIHex(int value, char hex[]);
 
-long asciiHexToInt(unsigned char hex[], int length);
+long asciiHexToInt(char hex[], int length);
 
 long LRC(byte* data, int dataLength);
 

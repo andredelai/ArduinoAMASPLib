@@ -6,15 +6,12 @@ int device = 0xBA;
 int codeLength = 0xF2;
 PacketType type;
 byte data[MSGMAXSIZE];
-
 void setup()
 {
-  // put your setup code here, to run once:
-
+  //Serial and AMASP setup
   Serial.begin(9600);
-  com.begin(&Serial);
-  Serial.flush();
-  Serial.println(device);
+  com.begin(Serial);
+  Serial.flush(); 
 }
 
 void loop() {
