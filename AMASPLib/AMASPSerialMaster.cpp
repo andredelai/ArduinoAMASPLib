@@ -1,8 +1,8 @@
 #include "Arduino.h"
 #include "AMASP.h"
 
-HardwareSerial *masterCom = NULL;
 
+//Constructor
 AMASPSerialMaster::AMASPSerialMaster()
 {
 
@@ -15,7 +15,10 @@ void AMASPSerialMaster:: begin(HardwareSerial *serial)
 
 void AMASPSerialMaster::end()
 {
-  masterCom->end();
+  if (masterCom != NULL)
+  {
+    masterCom->end();
+  }
 }
 
 int AMASPSerialMaster::sendRequisition(int deviceID, byte message[], int msgLength)
@@ -92,62 +95,65 @@ void AMASPSerialMaster::sendError(int deviceID, int errorCode)
 PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *codeLength)
 {
   byte buf[PKTMAXSIZE];
-  bool keepReading = true;
   PacketType type;
   byte *endPktPtr;
-  int aux;
+  long aux;
 
   //Searching for a packet in serial buffer (starts with !).
   while (masterCom->readBytes(buf, 1) != 0)
   {
-    masterCom->print("read");
     if (buf[0] == '!')
     {
-      masterCom->print("!");
       //Reading packet type
       if (masterCom->readBytes(&buf[1], 1) != 1)
       {
-        masterCom->print("timeout");
         return Timeout;
       }
       //Verifing type
       switch (buf[1])
       {
-        //SRP Packet
+        //SRP Packet******
         case '#':
           //Reading device ID and msg length
           if (masterCom->readBytes(&buf[2], 6) == 6)
           {
             //Extracting device ID
-            if (*deviceID = asciiHexToInt(&buf[2], 3) != -1)
+            *deviceID = asciiHexToInt(&buf[2], 3);
+            if (*deviceID != -1)
             {
               //Extracting message length
-              if (*codeLength = asciiHexToInt(&buf[5], 3) != -1)
+              *codeLength = asciiHexToInt(&buf[5], 3);
+              if (*codeLength != -1)
               {
-                if (codeLength > MSGMAXSIZE)
+                //Checking the packet size limit
+                if (*codeLength <= MSGMAXSIZE)
                 {
-                  return Error;
-                }
-                //Extracting message, LRC and end packet chars
-                if (masterCom->readBytes(&buf[8], *codeLength + 6) == *codeLength + 6)
-                {
-                  //LRC checking
-                  aux = asciiHexToInt(&buf[aux + 9], 4);
-                  if (aux == LRC(&buf[aux + 9], 4))
+                  //Extracting message, LRC and end packet chars
+                  if (masterCom->readBytes(&buf[8], (*codeLength) + 6) == (*codeLength) + 6)
                   {
-                    //Checking the packet end
-                    if (buf[*codeLength + 13] == '\r' ||  buf[*codeLength + 14] == '\n')
+                    //LRC checking
+                    aux = asciiHexToInt(&buf[(*codeLength) + 8], 4);
+                    if (aux != -1)
                     {
-                      //Extracting message
-                      memcpy(message, &buf[8], *codeLength);
-                      return SRP;
+                      if (aux == LRC(buf, (*codeLength) + 8))
+                      {
+                        //Checking the packet end
+                        if (buf[*codeLength + 12] == '\r' ||  buf[*codeLength + 13] == '\n')
+                        {
+                          //Extracting message
+                          memcpy(message, &buf[8], *codeLength);
+                          return MRP;
+                        }
+                      }
                     }
                   }
+                  else
+                  {
+                    return Timeout;
+                  }
+
                 }
-                else
-                {
-                  return Timeout;
-                }
+
               }
             }
           }
@@ -157,24 +163,28 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
           }
           break;
 
-        //SIP Packet
+        //SIP Packet******
         case '!':
           if (masterCom->readBytes(&buf[2], 11) != 11)
           {
             return Timeout;
           }
-          if (aux = asciiHexToInt(&buf[4], 4) != -1)
+          aux = asciiHexToInt(&buf[7], 4);
+          if (aux != -1)
           {
-            if (aux == LRC(&buf[aux + 8], 4))
+            //LRC check
+            if (aux == LRC(buf, 7))
             {
-              //Reading device ID
-              if (*deviceID = asciiHexToInt(&buf[2], 3) != -1)
+              //Extracting device ID
+              *deviceID = asciiHexToInt(&buf[2], 3);
+              if (*deviceID != -1)
               {
                 //Reading interrupt code
-                if (*codeLength = asciiHexToInt(&buf[5], 2) != -1)
+                *codeLength = asciiHexToInt(&buf[5], 2);
+                if (*codeLength != -1)
                 {
                   //Checking the packet end
-                  if (buf[aux + 11] == '\r' ||  buf[12] == '\n')
+                  if (buf[11] == '\r' ||  buf[12] == '\n')
                   {
                     return SIP;
                   }
@@ -184,25 +194,30 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
           }
           break;
 
-        //CEP Packet
+        //CEP Packet*****
         case '~':
           if (masterCom->readBytes(&buf[2], 11) != 11)
           {
             return Timeout;
           }
-          if (aux = asciiHexToInt(&buf[4], 4) != -1)
+          aux = asciiHexToInt(&buf[7], 4);
+          if (aux != -1)
           {
-            if (aux == LRC(&buf[aux + 8], 4))
+            //LRC check
+            if (aux == LRC(buf, 7))
             {
-              //Reading device ID
-              if (*deviceID = asciiHexToInt(&buf[2], 3) != -1)
+              //Extracting device ID
+              *deviceID = asciiHexToInt(&buf[2], 3);
+              if (*deviceID != -1)
               {
-                //Reading error code
-                if (*codeLength = asciiHexToInt(&buf[5], 2) != -1)
+                //Reading interrupt code
+                *codeLength = asciiHexToInt(&buf[5], 2);
+                if (*codeLength != -1)
                 {
-                  if (buf[aux + 11] == '\r' ||  buf[12] == '\n')
+                  //Checking the packet end
+                  if (buf[11] == '\r' ||  buf[12] == '\n')
                   {
-                    return SIP;
+                    return CEP;
                   }
                 }
               }
