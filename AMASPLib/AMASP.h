@@ -1,5 +1,5 @@
 /*
-  AMASP.h - AMASP - ASCII Master Slave Protocol library for Arduino (version 0.5).
+  AMASP.h - AMASP (ASCII MAster Slave Protocol) library for Arduino (version 0.5).
   Created by Andre Luiz Delai, November 17, 2017.
   Copyright (c) 2017 Andre L. Delai.  All right reserved.
 

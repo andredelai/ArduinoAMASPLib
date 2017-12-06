@@ -128,7 +128,7 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
                 //Checking the packet size limit
                 if (*codeLength <= MSGMAXSIZE)
                 {
-                  //Extracting message, LRC and end packet chars
+                  //Reading message, LRC and end packet chars
                   if (masterCom->readBytes(&buf[8], (*codeLength) + 6) == (*codeLength) + 6)
                   {
                     //LRC checking
@@ -142,7 +142,7 @@ PacketType AMASPSerialMaster::readPacket(int *deviceID, byte message[], int *cod
                         {
                           //Extracting message
                           memcpy(message, &buf[8], *codeLength);
-                          return SRP;//MRP recognized
+                          return SRP;//SRP recognized
                         }
                       }
                     }
