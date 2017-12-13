@@ -26,7 +26,7 @@ void AMASPSerialSlave::sendResponse(int deviceID, byte message[], int msgLength)
 {
   char hex[sizeof(int) * 2];
 
-  //mounting the packet
+  //Mounting the packet
   byte pkt[PKTMAXSIZE];
   //byte* pkt = new byte[14 + msgLength];
 

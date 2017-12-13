@@ -8,9 +8,9 @@ AMASPSerialMaster::AMASPSerialMaster()
 
 }
 
-void AMASPSerialMaster:: begin(HardwareSerial *serial)
+void AMASPSerialMaster:: begin(HardwareSerial &serial)
 {
-  masterCom = serial;
+  masterCom = &serial;
 }
 
 void AMASPSerialMaster::end()
@@ -25,7 +25,7 @@ int AMASPSerialMaster::sendRequisition(int deviceID, byte message[], int msgLeng
 {
   char hex[sizeof(int) * 2];
 
-  //mounting the packet
+  //Mounting the packet
   byte pkt[PKTMAXSIZE];
   //byte* pkt = new byte[14 + msgLength];
 

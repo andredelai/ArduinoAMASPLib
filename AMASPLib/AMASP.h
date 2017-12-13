@@ -1,5 +1,5 @@
 /*
-  AMASP.h - AMASP (ASCII MAster Slave Protocol) library for Arduino (version 0.5).
+  AMASP.h - AMASP (ASCII MAster Slave Protocol) library for Arduino (version 0.9).
   Created by Andre Luiz Delai, November 17, 2017.
   Copyright (c) 2017 Andre L. Delai.  All right reserved.
 
@@ -30,6 +30,7 @@
 //SRP - Slave Response Packet
 //SIP - Slave Interrupt Packet
 //CEP - Communication Error Packet
+//Timeout - No packet found
 enum PacketType {MRP = 0, SRP, SIP, CEP, Timeout};
 
 //Serial Master class
@@ -37,10 +38,15 @@ class AMASPSerialMaster
 {
   public:
     AMASPSerialMaster();
-    void begin(HardwareSerial *serial);
+    //Starts the master
+    void begin(HardwareSerial &serial);
+    //Finalize the master (close the communication)
     void end();
+    //Send a MRP packet
     int sendRequisition(int deviceID, byte message[], int msgLength);
+    //Send a CEP packet
     void sendError(int device, int errorCode);
+    //Search for received packets
     PacketType readPacket(int *deviceID, byte message[], int *codeLength);
 
   private:
@@ -52,11 +58,17 @@ class AMASPSerialSlave
 {
   public:
     AMASPSerialSlave();
+    //Starts the slave
     void begin(HardwareSerial &serial);
+    //Finalize the slave (close the communication)
     void end();
+    //Send a SRP packet
     void sendResponse(int deviceID, byte message[], int msgLength);
+    //Send a SIP packet
     void sendInterruption(int deviceID, int code);
+    //Send a CEP packet
     void sendError(int Device, int code);
+    //Search for received packets
     PacketType readPacket(int *deviceID, byte message[], int *codeLength);
 
   private:
@@ -64,10 +76,14 @@ class AMASPSerialSlave
 };
 
 //Auxiliary functions***********
+
+//Dec int to ASCII hex conversion
 void intToASCIIHex(int value, char hex[]);
 
+//ASCII Hex to a long decimal conversion
 long asciiHexToInt(char hex[], int length);
 
+// Longitudinal Redundancy Check function (16 bits)
 long LRC(byte* data, int dataLength);
 
 #endif
