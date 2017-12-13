@@ -123,7 +123,7 @@ void AMASPSerialSlave::sendError(int deviceID, int errorCode)
   slaveCom->write(pkt, 13);
 }
 
-PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *codeLength)
+PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &codeLength)
 {
   byte buf[PKTMAXSIZE];
   PacketType type;
@@ -149,29 +149,29 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
           if (slaveCom->readBytes(&buf[2], 6) == 6)
           {
             //Extracting device ID
-            *deviceID = asciiHexToInt(&buf[2], 3);
-            if (*deviceID != -1)
+            deviceID = asciiHexToInt(&buf[2], 3);
+            if (deviceID != -1)
             {
               //Extracting message length
-              *codeLength = asciiHexToInt(&buf[5], 3);
-              if (*codeLength != -1)
+              codeLength = asciiHexToInt(&buf[5], 3);
+              if (codeLength != -1)
               {
-                if (*codeLength <= MSGMAXSIZE)
+                if (codeLength <= MSGMAXSIZE || codeLength != 0)
                 {
                   //Extracting message, LRC and end packet chars
-                if (slaveCom->readBytes(&buf[8], (*codeLength) + 6) == (*codeLength) + 6)
+                if (slaveCom->readBytes(&buf[8], (codeLength) + 6) == (codeLength) + 6)
                 {
                   //LRC checking
-                  aux = asciiHexToInt(&buf[(*codeLength) + 8], 4);
+                  aux = asciiHexToInt(&buf[(codeLength) + 8], 4);
                   if (aux != -1)
                   {
-                    if (aux == LRC(buf, (*codeLength) + 8))
+                    if (aux == LRC(buf, (codeLength) + 8))
                     {
                       //Checking the packet end
-                      if (buf[*codeLength + 12] == '\r' ||  buf[*codeLength + 13] == '\n')
+                      if (buf[codeLength + 12] == '\r' ||  buf[codeLength + 13] == '\n')
                       {
                         //Extracting message
-                        memcpy(message, &buf[8], *codeLength);
+                        memcpy(message, &buf[8], codeLength);
                         return MRP;//MRP recognized
                       }
                     }
@@ -205,12 +205,12 @@ PacketType AMASPSerialSlave::readPacket(int *deviceID, byte message[], int *code
             if (aux == LRC(buf, 7))
             {
               //Extracting device ID
-              *deviceID = asciiHexToInt(&buf[2], 3);
-              if (*deviceID != -1)
+              deviceID = asciiHexToInt(&buf[2], 3);
+              if (deviceID != -1)
               {
                 //Reading interrupt code
-                *codeLength = asciiHexToInt(&buf[5], 2);
-                if (*codeLength != -1)
+                codeLength = asciiHexToInt(&buf[5], 2);
+                if (codeLength != -1)
                 {
                   //Checking the packet end
                   if (buf[11] == '\r' ||  buf[12] == '\n')

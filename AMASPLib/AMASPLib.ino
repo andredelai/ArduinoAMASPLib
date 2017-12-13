@@ -30,7 +30,7 @@ void loop() {
   // Listening serial interface...
   if (Serial.available() > 0)
   {
-    type = slave.readPacket(&device, data, &codeLength);
+    type = slave.readPacket(device, data, codeLength);
     switch (type)
     {
       case MRP:        

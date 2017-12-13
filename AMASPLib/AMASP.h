@@ -47,7 +47,7 @@ class AMASPSerialMaster
     //Send a CEP packet
     void sendError(int device, int errorCode);
     //Search for received packets
-    PacketType readPacket(int *deviceID, byte message[], int *codeLength);
+    PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
   private:
     HardwareSerial *masterCom = NULL;
@@ -69,7 +69,7 @@ class AMASPSerialSlave
     //Send a CEP packet
     void sendError(int Device, int code);
     //Search for received packets
-    PacketType readPacket(int *deviceID, byte message[], int *codeLength);
+    PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
   private:
     HardwareSerial *slaveCom = NULL;
