@@ -26,7 +26,7 @@
 #define PKTMAXSIZE MSGMAXSIZE + 14 //Maximum packet size in bytes.
 
 //AMASP Packet types returned by readPacket function.
-//MRP - Master Requisition Packet
+//MRP - Master Request Packet
 //SRP - Slave Response Packet
 //SIP - Slave Interrupt Packet
 //CEP - Communication Error Packet
@@ -43,7 +43,7 @@ class AMASPSerialMaster
     //Finalize the master (close the communication)
     void end();
     //Send a MRP packet
-    int sendRequisition(int deviceID, byte message[], int msgLength);
+    int sendRequest(int deviceID, byte message[], int msgLength);
     //Send a CEP packet
     void sendError(int device, int errorCode);
     //Search for received packets

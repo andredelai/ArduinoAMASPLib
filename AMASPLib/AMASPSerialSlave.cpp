@@ -58,7 +58,7 @@ void AMASPSerialSlave::sendResponse(int deviceID, byte message[], int msgLength)
   pkt[8 + msgLength + 4] = '\r';
   pkt[8 + msgLength + 5] = '\n';
 
-  //sending requisition
+  //sending Request
   slaveCom->write(pkt, 14 + msgLength);
 
 }

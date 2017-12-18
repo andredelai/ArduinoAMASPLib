@@ -21,7 +21,7 @@ void AMASPSerialMaster::end()
   }
 }
 
-int AMASPSerialMaster::sendRequisition(int deviceID, byte message[], int msgLength)
+int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
 {
   char hex[sizeof(int) * 2];
 
@@ -57,7 +57,7 @@ int AMASPSerialMaster::sendRequisition(int deviceID, byte message[], int msgLeng
   pkt[8 + msgLength + 4] = '\r';
   pkt[8 + msgLength + 5] = '\n';
 
-  //sending requisition
+  //sending Request
   masterCom->write(pkt, 14 + msgLength);
 
 }
