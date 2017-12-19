@@ -22,7 +22,13 @@
 
 #include "Arduino.h"
 
-#define MSGMAXSIZE 128 //Maximum number of bytes per message on Arduino.
+/// <summary>
+/// Maximum number of bytes per message on Arduino.
+/// </summary>
+#define MSGMAXSIZE 128
+/// <summary>
+/// //Maximum packet size in bytes.
+/// </summary>
 #define PKTMAXSIZE MSGMAXSIZE + 14 //Maximum packet size in bytes.
 
 //AMASP Packet types returned by readPacket function.
@@ -38,15 +44,36 @@ class AMASPSerialMaster
 {
   public:
     AMASPSerialMaster();
-    //Starts the master
+    /// <summary>
+    /// Initializes the master connecting it to the serial link.
+    /// </summary>
+    /// <param name="serial">Serial communication object. </param>
     void begin(HardwareSerial &serial);
-    //Finalize the master (close the communication)
+    /// <summary>
+    /// Finalizes the master disconnect it from the serial link.
+    /// </summary>
     void end();
     //Send a MRP packet
+    /// <summary>
+    /// Send a MRP (Master Request Packet).
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="message">Message to be send to the associated device.</param>
+    /// <param name="msgLength">Message length in bytes.</param>
     int sendRequest(int deviceID, byte message[], int msgLength);
-    //Send a CEP packet
+    /// <summary>
+    /// Send a CEP (Communication Error Packet).
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="errorCode">The communication error code.</param>
     void sendError(int device, int errorCode);
-    //Search for received packets
+    /// <summary>
+    /// Read the incoming AMASP packet.
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="message">Message read from the associated device.</param>
+    /// <param name="msgLength">Message length in bytes.</param>
+    /// <returns>Return a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
     PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
   private:
@@ -58,17 +85,42 @@ class AMASPSerialSlave
 {
   public:
     AMASPSerialSlave();
-    //Starts the slave
+    /// <summary>
+    /// Initializes the slave connecting it to the serial link.
+    /// </summary>
+    /// <param name="serial">Serial communication object. </param>
     void begin(HardwareSerial &serial);
-    //Finalize the slave (close the communication)
+    /// <summary>
+    /// Finalizes the slave disconnect it from the serial link.
+    /// </summary>
     void end();
     //Send a SRP packet
+    /// <summary>
+    /// Send a SRP (Slave Response Packet).
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="message">Message to be send from the associated device.</param>
+    /// <param name="msgLength">Message length in bytes.</param>
     void sendResponse(int deviceID, byte message[], int msgLength);
-    //Send a SIP packet
+    /// <summary>
+    /// Send a SIP (Slave Interruption Packet).
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="errorCode">The interruption code.</param>
     void sendInterruption(int deviceID, int code);
-    //Send a CEP packet
+    /// <summary>
+    /// Send a CEP (Communication Error Packet).
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="errorCode">The communication error code.</param>
     void sendError(int Device, int code);
-    //Search for received packets
+    /// <summary>
+    /// Read the incoming AMASP packet.
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="message">Message read from the associated device.</param>
+    /// <param name="msgLength">Message length in bytes.</param>
+    /// <returns>Return a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
     PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
   private:

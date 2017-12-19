@@ -8,6 +8,8 @@ AMASPSerialMaster::AMASPSerialMaster()
 
 }
 
+
+
 void AMASPSerialMaster:: begin(HardwareSerial &serial)
 {
   masterCom = &serial;
