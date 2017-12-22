@@ -120,7 +120,7 @@ class AMASPSerialSlave
     /// <param name="deviceID">Device identification. </param>
     /// <param name="message">Message read from the associated device.</param>
     /// <param name="msgLength">Message length in bytes.</param>
-    /// <returns>Return a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
+    /// <returns>Returns a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
     PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
   private:
@@ -129,13 +129,28 @@ class AMASPSerialSlave
 
 //Auxiliary functions***********
 
-//Dec int to ASCII hex conversion
+
+/// <summary>
+/// Decimal int to ASCII hex conversion
+/// </summary>
+/// <param name="value">Decimal int value. </param>
+/// <param name="hex">Hexadecimal 4 chars value (output).</param>
 void intToASCIIHex(int value, char hex[]);
 
-//ASCII Hex to a long decimal conversion
+/// <summary>
+/// ASCII Hex to a long decimal conversion
+/// </summary>
+/// <param name="hex">Hexadecimal value. </param>
+/// <param name="length">Hexadecimal caracters length.</param>
+/// <returns>Returns the result of the conversion or -1 in a case of invalid number</returns>
 long asciiHexToInt(char hex[], int length);
 
-// Longitudinal Redundancy Check function (16 bits)
+/// <summary>
+/// Longitudinal Redundancy Check function (16 bits)
+/// </summary>
+/// <param name="data">Data array to the calculate the LRC. </param>
+/// <param name="dataLength">Data length.</param>
+/// <returns>Returns the calculated LRC value.</returns>
 long LRC(byte* data, int dataLength);
 
 #endif
