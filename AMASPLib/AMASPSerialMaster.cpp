@@ -1,14 +1,11 @@
 #include "Arduino.h"
 #include "AMASP.h"
 
-
 //Constructor
 AMASPSerialMaster::AMASPSerialMaster()
 {
 
 }
-
-
 
 void AMASPSerialMaster:: begin(HardwareSerial &serial)
 {
@@ -17,10 +14,7 @@ void AMASPSerialMaster:: begin(HardwareSerial &serial)
 
 void AMASPSerialMaster::end()
 {
-  if (masterCom != NULL)
-  {
-    masterCom->end();
-  }
+  masterCom = NULL;
 }
 
 int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
@@ -28,8 +22,7 @@ int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
   char hex[sizeof(int) * 2];
 
   //Mounting the packet
-  byte pkt[PKTMAXSIZE];
-  //byte* pkt = new byte[14 + msgLength];
+  byte pkt[MSGMAXSIZE + 14];
 
   //Packet Type
   pkt[0] = '!';
@@ -96,7 +89,7 @@ void AMASPSerialMaster::sendError(int deviceID, int errorCode)
 
 PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &codeLength)
 {
-  byte buf[PKTMAXSIZE];
+  byte buf[MSGMAXSIZE + 14];
   PacketType type;
   byte *endPktPtr;
   long aux;
@@ -153,9 +146,7 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
                   {
                     return Timeout;
                   }
-
                 }
-
               }
             }
           }

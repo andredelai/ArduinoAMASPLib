@@ -15,11 +15,7 @@ void AMASPSerialSlave::begin(HardwareSerial &serial)
 
 void AMASPSerialSlave::end()
 {
-  if (slaveCom != NULL)
-  {
-    slaveCom->end();
-  }
-
+  slaveCom = NULL;
 }
 
 void AMASPSerialSlave::sendResponse(int deviceID, byte message[], int msgLength)
@@ -27,8 +23,7 @@ void AMASPSerialSlave::sendResponse(int deviceID, byte message[], int msgLength)
   char hex[sizeof(int) * 2];
 
   //Mounting the packet
-  byte pkt[PKTMAXSIZE];
-  //byte* pkt = new byte[14 + msgLength];
+  byte pkt[MSGMAXSIZE + 14];
 
   //Packet Type
   pkt[0] = '!';
@@ -125,7 +120,7 @@ void AMASPSerialSlave::sendError(int deviceID, int errorCode)
 
 PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &codeLength)
 {
-  byte buf[PKTMAXSIZE];
+  byte buf[MSGMAXSIZE + 14];
   PacketType type;
   byte *endPktPtr;
   long aux;
@@ -181,8 +176,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
                 {
                   return Timeout;
                 }
-                }
-                
+                }                
               }
             }
           }

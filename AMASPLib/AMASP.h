@@ -26,10 +26,6 @@
 /// Maximum number of bytes per message on Arduino.
 /// </summary>
 #define MSGMAXSIZE 128
-/// <summary>
-/// //Maximum packet size in bytes.
-/// </summary>
-#define PKTMAXSIZE MSGMAXSIZE + 14 //Maximum packet size in bytes.
 
 //AMASP Packet types returned by readPacket function.
 //MRP - Master Request Packet
