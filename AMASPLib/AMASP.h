@@ -27,12 +27,14 @@
 /// </summary>
 #define MSGMAXSIZE 128
 
-//AMASP Packet types returned by readPacket function.
-//MRP - Master Request Packet
-//SRP - Slave Response Packet
-//SIP - Slave Interrupt Packet
-//CEP - Communication Error Packet
-//Timeout - No packet found
+///<sumary>
+///AMASP Packet types returned by readPacket function.
+///MRP - Master Request Packet
+///SRP - Slave Response Packet
+///SIP - Slave Interrupt Packet
+///CEP - Communication Error Packet
+///Timeout - No packet found
+/// </summary>
 enum PacketType {MRP = 0, SRP, SIP, CEP, Timeout};
 
 //Serial Master class
@@ -80,16 +82,22 @@ class AMASPSerialMaster
 class AMASPSerialSlave
 {
   public:
+    /// <summary>
+    ///Constructor
+    /// </summary>
     AMASPSerialSlave();
+    
     /// <summary>
     /// Initializes the slave connecting it to the serial link.
     /// </summary>
     /// <param name="serial">Serial communication object. </param>
     void begin(HardwareSerial &serial);
+    
     /// <summary>
     /// Finalizes the slave disconnect it from the serial link.
     /// </summary>
     void end();
+    
     //Send a SRP packet
     /// <summary>
     /// Send a SRP (Slave Response Packet).
@@ -98,17 +106,20 @@ class AMASPSerialSlave
     /// <param name="message">Message to be send from the associated device.</param>
     /// <param name="msgLength">Message length in bytes.</param>
     void sendResponse(int deviceID, byte message[], int msgLength);
+    
     /// <summary>
     /// Send a SIP (Slave Interruption Packet).
     /// </summary>
     /// <param name="deviceID">Device identification. </param>
     /// <param name="errorCode">The interruption code.</param>
+    
     void sendInterruption(int deviceID, int code);
     /// <summary>
     /// Send a CEP (Communication Error Packet).
     /// </summary>
     /// <param name="deviceID">Device identification. </param>
     /// <param name="errorCode">The communication error code.</param>
+    
     void sendError(int Device, int code);
     /// <summary>
     /// Read the incoming AMASP packet.

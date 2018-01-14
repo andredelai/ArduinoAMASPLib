@@ -113,7 +113,7 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
           if (masterCom->readBytes(&buf[2], 6) == 6)
           {
             //Extracting device ID
-            deviceID = asciiHexToInt(&buf[2], 3);
+            deviceID = (int)asciiHexToInt(&buf[2], 3);
             if (deviceID != -1)
             {
               //Extracting message length

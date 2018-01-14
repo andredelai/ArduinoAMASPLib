@@ -144,7 +144,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           if (slaveCom->readBytes(&buf[2], 6) == 6)
           {
             //Extracting device ID
-            deviceID = asciiHexToInt(&buf[2], 3);
+            deviceID = (int)asciiHexToInt(&buf[2], 3);
             if (deviceID != -1)
             {
               //Extracting message length

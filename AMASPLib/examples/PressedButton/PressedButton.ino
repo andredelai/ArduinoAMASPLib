@@ -1,7 +1,11 @@
 #include <AMASP.h>
 
 /*
-  Debounce
+  AMASP button event example.
+
+  The arduino works in slave mode using the AMASP procotol for exchanging messages.
+  He sends an interruption packet to the master every time that the button is pressed,
+  informing the led status.
 
   Each time the input pin goes from LOW to HIGH (e.g. because of a push-button
   press), the output pin is toggled from LOW to HIGH or HIGH to LOW. There's a
@@ -15,6 +19,15 @@
   - Note: On most Arduino boards, there is already an LED on the board connected
     to pin 13, so you don't need any extra components for this example.
 
+  This example code is in the public domain.
+
+  AMASP button event code created 13 Jan 2018
+  by Andre L. Delai
+
+  Based on the debounce code in:
+  http://www.arduino.cc/en/Tutorial/Debounce
+
+  Original debounce code
   created 21 Nov 2006
   by David A. Mellis
   modified 30 Aug 2011
@@ -23,15 +36,12 @@
   by Mike Walters
   modified 30 Aug 2016
   by Arturo Guadalupi
-
-  This example code is in the public domain.
-
-  http://www.arduino.cc/en/Tutorial/Debounce
 */
 
-AMASPSerialSlave slave;
-int device = 1; //button as device 1
-int codeLength = 0;
+AMASPSerialSlave slave; //AMASP slave instance
+
+int device = 1; //button set as device 1
+int codeLength = 0; //variable to receive the interruption code
 
 // constants won't change. They're used here to set pin numbers:
 const int buttonPin = 2;    // the number of the pushbutton pin
@@ -54,7 +64,7 @@ void setup() {
   Serial.flush();
   // connect the slave to the serial port
   slave.begin(Serial);
-  
+
   pinMode(buttonPin, INPUT);
 }
 
@@ -83,10 +93,14 @@ void loop() {
       // only toggle the LED if the new button state is HIGH
       if (buttonState == HIGH) {
         ledState = !ledState;
+        //Send the interruption packet informing the led status after the button pressed event.
         slave.sendInterruption(device, ledState);
       }
     }
   }
+
+  // set the LED:
+  digitalWrite(ledPin, ledState);
 
   // save the reading. Next time through the loop, it'll be the lastButtonState:
   lastButtonState = reading;

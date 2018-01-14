@@ -1,5 +1,5 @@
 //This code is a kind of loopback for all AMASP received packets.
-//Arduino in slave mode
+//Arduino in SLAVE mode
 
 #include "AMASP.h"
 #include "Arduino.h"
