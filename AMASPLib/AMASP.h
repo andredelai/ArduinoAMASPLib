@@ -41,16 +41,22 @@ enum PacketType {MRP = 0, SRP, SIP, CEP, Timeout};
 class AMASPSerialMaster
 {
   public:
+    /// <summary>
+    ///Constructor
+    /// </summary>
     AMASPSerialMaster();
+    
     /// <summary>
     /// Initializes the master connecting it to the serial link.
     /// </summary>
     /// <param name="serial">Serial communication object. </param>
     void begin(HardwareSerial &serial);
+    
     /// <summary>
     /// Finalizes the master disconnect it from the serial link.
     /// </summary>
     void end();
+    
     //Send a MRP packet
     /// <summary>
     /// Send a MRP (Master Request Packet).
@@ -59,12 +65,14 @@ class AMASPSerialMaster
     /// <param name="message">Message to be send to the associated device.</param>
     /// <param name="msgLength">Message length in bytes.</param>
     int sendRequest(int deviceID, byte message[], int msgLength);
+    
     /// <summary>
     /// Send a CEP (Communication Error Packet).
     /// </summary>
     /// <param name="deviceID">Device identification. </param>
     /// <param name="errorCode">The communication error code.</param>
     void sendError(int device, int errorCode);
+    
     /// <summary>
     /// Read the incoming AMASP packet.
     /// </summary>
