@@ -66,6 +66,10 @@ void setup() {
   slave.begin(Serial);
 
   pinMode(buttonPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+
+  // set initial LED state
+  digitalWrite(ledPin, ledState);
 }
 
 void loop() {
