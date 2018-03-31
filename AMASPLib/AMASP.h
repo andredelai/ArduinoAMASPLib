@@ -168,4 +168,12 @@ long asciiHexToInt(char hex[], int length);
 /// <returns>Returns the calculated LRC value.</returns>
 long LRC(byte* data, int dataLength);
 
+/// <summary>
+/// Cyclic Redundancy Check function (16 bits)
+/// </summary>
+/// <param name="data">Data array to the calculate the LRC. </param>
+/// <param name="dataLength">Data length.</param>
+/// <returns>Returns the calculated LRC value.</returns>
+int CRC16(byte* data, int dataLength);
+
 #endif

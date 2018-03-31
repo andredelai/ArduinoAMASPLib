@@ -43,8 +43,8 @@ void AMASPSerialSlave::sendResponse(int deviceID, byte message[], int msgLength)
   {
     pkt[8 + i] = message[i];
   }
-  //LRC
-  intToASCIIHex(LRC(pkt, 5 + msgLength + 3), hex);
+  //CRC16
+  intToASCIIHex(CRC16(pkt, 5 + msgLength + 3), hex);
   pkt[8 + msgLength] = hex[3];
   pkt[8 + msgLength + 1] = hex[2];
   pkt[8 + msgLength + 2] = hex[1];
@@ -75,8 +75,8 @@ void AMASPSerialSlave::sendInterruption(int deviceID, int code)
   intToASCIIHex(code, hex);
   pkt[5] = hex[1];
   pkt[6] = hex[0];
-  //LRC
-  intToASCIIHex(LRC(pkt, 7), hex);
+  //CRC16
+  intToASCIIHex(CRC16(pkt, 7), hex);
   pkt[7] = hex[3];
   pkt[8] = hex[2];
   pkt[9] = hex[1];
@@ -105,8 +105,8 @@ void AMASPSerialSlave::sendError(int deviceID, int errorCode)
   intToASCIIHex(errorCode, hex);
   pkt[5] = hex[1];
   pkt[6] = hex[0];
-  //LRC
-  intToASCIIHex(LRC(pkt, 7), hex);
+  //CRC16
+  intToASCIIHex(CRC16(pkt, 7), hex);
   pkt[7] = hex[3];
   pkt[8] = hex[2];
   pkt[9] = hex[1];
@@ -123,7 +123,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
   byte buf[MSGMAXSIZE + 14];
   PacketType type;
   byte *endPktPtr;
-  long aux;
+  int aux;
 
   //Searching for a packet in serial buffer (starts with !).
   while (slaveCom->readBytes(buf, 1) != 0)
@@ -153,14 +153,14 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
               {
                 if (codeLength <= MSGMAXSIZE || codeLength != 0)
                 {
-                  //Extracting message, LRC and end packet chars
+                  //Extracting message, CRC16 and end packet chars
                 if (slaveCom->readBytes(&buf[8], (codeLength) + 6) == (codeLength) + 6)
                 {
-                  //LRC checking
+                  //CRC16 checking
                   aux = asciiHexToInt(&buf[(codeLength) + 8], 4);
                   if (aux != -1)
                   {
-                    if (aux == LRC(buf, (codeLength) + 8))
+                    if (aux == CRC16(buf, (codeLength) + 8))
                     {
                       //Checking the packet end
                       if (buf[codeLength + 12] == '\r' ||  buf[codeLength + 13] == '\n')
@@ -195,8 +195,8 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           aux = asciiHexToInt(&buf[7], 4);
           if (aux != -1)
           {
-            //LRC check
-            if (aux == LRC(buf, 7))
+            //CRC16 check
+            if (aux == CRC16(buf, 7))
             {
               //Extracting device ID
               deviceID = asciiHexToInt(&buf[2], 3);
