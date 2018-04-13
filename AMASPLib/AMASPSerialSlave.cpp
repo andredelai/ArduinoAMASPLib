@@ -44,7 +44,7 @@ void AMASPSerialSlave::sendResponse(int deviceID, byte message[], int msgLength)
     pkt[8 + i] = message[i];
   }
   //CRC16
-  intToASCIIHex(CRC16(pkt, 5 + msgLength + 3), hex);
+  intToASCIIHex(CRC16SerialModbus(pkt, 5 + msgLength + 3), hex);
   pkt[8 + msgLength] = hex[3];
   pkt[8 + msgLength + 1] = hex[2];
   pkt[8 + msgLength + 2] = hex[1];
@@ -76,7 +76,7 @@ void AMASPSerialSlave::sendInterruption(int deviceID, int code)
   pkt[5] = hex[1];
   pkt[6] = hex[0];
   //CRC16
-  intToASCIIHex(CRC16(pkt, 7), hex);
+  intToASCIIHex(CRC16SerialModbus(pkt, 7), hex);
   pkt[7] = hex[3];
   pkt[8] = hex[2];
   pkt[9] = hex[1];
@@ -106,7 +106,7 @@ void AMASPSerialSlave::sendError(int deviceID, int errorCode)
   pkt[5] = hex[1];
   pkt[6] = hex[0];
   //CRC16
-  intToASCIIHex(CRC16(pkt, 7), hex);
+  intToASCIIHex(CRC16SerialModbus(pkt, 7), hex);
   pkt[7] = hex[3];
   pkt[8] = hex[2];
   pkt[9] = hex[1];
@@ -160,7 +160,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
                   aux = asciiHexToInt(&buf[(codeLength) + 8], 4);
                   if (aux != -1)
                   {
-                    if (aux == CRC16(buf, (codeLength) + 8))
+                    if (aux == CRC16SerialModbus(buf, (codeLength) + 8))
                     {
                       //Checking the packet end
                       if (buf[codeLength + 12] == '\r' ||  buf[codeLength + 13] == '\n')
@@ -196,7 +196,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           if (aux != -1)
           {
             //CRC16 check
-            if (aux == CRC16(buf, 7))
+            if (aux == CRC16SerialModbus(buf, 7))
             {
               //Extracting device ID
               deviceID = asciiHexToInt(&buf[2], 3);

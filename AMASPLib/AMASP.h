@@ -174,6 +174,6 @@ long LRC(byte* data, int dataLength);
 /// <param name="data">Data array to the calculate the LRC. </param>
 /// <param name="dataLength">Data length.</param>
 /// <returns>Returns the calculated LRC value.</returns>
-int CRC16(byte* data, int dataLength);
+short CRC16SerialModbus(byte* data, int dataLength);
 
 #endif

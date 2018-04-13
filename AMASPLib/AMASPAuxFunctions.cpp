@@ -45,39 +45,23 @@ long LRC(byte* data, int dataLength)
   return lrc;
 }
 
-int CRC16_DNP(unsigned int crcValue, unsigned char newByte) 
+
+// Compute the MODBUS RTU CRC
+short CRC16SerialModbus(byte* data, int dataLength)
 {
-  unsigned char i;
+  short crc = (short) 0xFFFF;
+  for (int pos = 0; pos < dataLength; pos++) {
+    crc ^= (short) data[pos];          // XOR byte into least sig. byte of crc
 
-  for (i = 0; i < 8; i++) {
-
-    if (((crcValue & 0x8000) >> 8) ^ (newByte & 0x80))
+    for (int i = 8; i != 0; i--) // Loop over each bit
     {
-      crcValue = (crcValue << 1)  ^ POLYNOM;
+      crc >>= 1;
+      if ((crc & 0x0001) != 0) // If the LSB is set
+      {
+        crc ^= 0xA001; // Polynomial
+      }
     }
-    else
-    {
-      crcValue = (crcValue << 1);
-    }
-
-    newByte <<= 1;
   }
-  
-  return crcValue;
-}
-
-int CRC16(byte* data, int dataLength)
-{
-  unsigned int crc;
-  unsigned char aux = 0;
-
-  crc = 0x0000; //Initialization of crc to 0x0000 for DNP
-
-  while (aux < dataLength)
-  {
-    crc = CRC16_DNP(crc,data[aux]);
-    aux++;
-  }
-  
-  return (~crc); //The crc value for DNP it is obtained by NOT operation
+  // Note, this number has low and high bytes swapped, so use it accordingly (or swap bytes)
+  return crc;
 }
