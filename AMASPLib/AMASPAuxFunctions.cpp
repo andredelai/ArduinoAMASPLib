@@ -49,13 +49,14 @@ long LRC(byte* data, int dataLength)
 // Compute the MODBUS RTU CRC
 short CRC16SerialModbus(byte* data, int dataLength)
 {
-  short crc = (short) 0xFFFF;
+  unsigned short crc = (short) 0xFFFF;
   for (int pos = 0; pos < dataLength; pos++) {
-    crc ^= (short) data[pos];          // XOR byte into least sig. byte of crc
+    crc ^= (unsigned short) data[pos];          // XOR byte into least sig. byte of crc
 
     for (int i = 8; i != 0; i--) // Loop over each bit
     {
       crc >>= 1;
+      crc &= 0x7FFF;
       if ((crc & 0x0001) != 0) // If the LSB is set
       {
         crc ^= 0xA001; // Polynomial
