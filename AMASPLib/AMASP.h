@@ -166,7 +166,23 @@ long asciiHexToInt(char hex[], int length);
 /// <param name="data">Data array to the calculate the LRC. </param>
 /// <param name="dataLength">Data length.</param>
 /// <returns>Returns the calculated LRC value.</returns>
-long LRC(byte* data, int dataLength);
+short LRC(byte* data, int dataLength);
+
+/// <summary>
+/// Classic checksum (16 bits)
+/// </summary>
+/// <param name="data">Data array to the calculate the checksum. </param>
+/// <param name="dataLength">Data length.</param>
+/// <returns>Returns the calculated checksum value.</returns>
+short checksum(byte message[], int dataLength);
+
+/// <summary>
+/// Fletcher checksum (16 bits)
+/// </summary>
+/// <param name="data">Data array to the calculate the Fletcher checksum. </param>
+/// <param name="dataLength">Data length.</param>
+/// <returns>Returns the calculated Fletcher checksum value.</returns>
+short fletcher16Checksum(byte *data, int dataLength);
 
 /// <summary>
 /// Cyclic Redundancy Check function (16 bits)

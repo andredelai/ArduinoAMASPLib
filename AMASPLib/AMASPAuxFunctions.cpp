@@ -34,9 +34,21 @@ long asciiHexToInt(char hex[], int length)
   return num;
 }
 
-long LRC(byte* data, int dataLength)
+//Classical checksum
+short checksum(byte message[], int dataLength)
 {
-  long lrc = 0;
+    unsigned short sum = 0;
+    while (dataLength-- > 0)
+    {
+        sum += *(message++);
+    }
+    return (sum);
+}   /* Sum() */
+
+// LRC 16 bit checksum
+short LRC(byte* data, int dataLength)
+{
+  unsigned short lrc = 0;
   for (int i = 0; i < dataLength; i++)
   {
     lrc = (lrc + data[i]) & 0xFFFF;
@@ -44,7 +56,6 @@ long LRC(byte* data, int dataLength)
   lrc = (((lrc ^ 0xFFFF) + 1) & 0xFFFF);
   return lrc;
 }
-
 
 // Compute the MODBUS RTU CRC
 short CRC16SerialModbus(byte* data, int dataLength)
@@ -65,4 +76,27 @@ short CRC16SerialModbus(byte* data, int dataLength)
   }
   // Note, this number has low and high bytes swapped, so use it accordingly (or swap bytes)
   return crc;
+}
+
+// Fletcher 16 bit checksum
+short fletcher16Checksum(byte *data, int dataLength)
+{
+        uint32_t c0, c1;
+        unsigned int i;
+
+        for (c0 = c1 = 0; dataLength >= 5802; dataLength -= 5802) {
+                for (i = 0; i < 5802; ++i) {
+                        c0 = c0 + *data++;
+                        c1 = c1 + c0;
+                }
+                c0 = c0 % 255;
+                c1 = c1 % 255;
+        }
+        for (i = 0; i < dataLength; ++i) {
+                c0 = c0 + *data++;
+                c1 = c1 + c0;
+        }
+        c0 = c0 % 255;
+        c1 = c1 % 255;
+        return (c1 << 8 | c0);
 }
