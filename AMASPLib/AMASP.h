@@ -36,6 +36,7 @@
 ///Timeout - No packet found
 /// </summary>
 enum PacketType {MRP = 0, SRP, SIP, CEP, Timeout};
+enum ErrorCheck {None = 0, checksum16, LRC16, fletcher16, CRC16 };
 
 //Serial Master class
 class AMASPSerialMaster
@@ -65,6 +66,8 @@ class AMASPSerialMaster
     /// <param name="message">Message to be send to the associated device.</param>
     /// <param name="msgLength">Message length in bytes.</param>
     int sendRequest(int deviceID, byte message[], int msgLength);
+
+    int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength, ErrorCheck errorChk);
     
     /// <summary>
     /// Send a CEP (Communication Error Packet).
