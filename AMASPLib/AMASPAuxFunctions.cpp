@@ -34,6 +34,17 @@ long asciiHexToInt(char hex[], int length)
   return num;
 }
 
+short XOR(byte* data, int dataLength)
+{
+  char xorCheck = 0;
+  for(int i=0; i<dataLength; i++)
+  {
+      xorCheck ^= data[i];
+  }
+  return (short)xorCheck;
+}
+
+
 //Classical checksum
 short checksum(byte message[], int dataLength)
 {

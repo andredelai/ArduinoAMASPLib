@@ -36,7 +36,7 @@
 ///Timeout - No packet found
 /// </summary>
 enum PacketType {MRP = 0, SRP, SIP, CEP, Timeout};
-enum ErrorCheck {None = 0, checksum16, LRC16, fletcher16, CRC16 };
+enum ErrorCheck {None = 0, XOR8, checksum16, LRC16, fletcher16, CRC16};
 
 //Serial Master class
 class AMASPSerialMaster
@@ -66,8 +66,6 @@ class AMASPSerialMaster
     /// <param name="message">Message to be send to the associated device.</param>
     /// <param name="msgLength">Message length in bytes.</param>
     int sendRequest(int deviceID, byte message[], int msgLength);
-
-    int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength, ErrorCheck errorChk);
     
     /// <summary>
     /// Send a CEP (Communication Error Packet).
@@ -85,8 +83,11 @@ class AMASPSerialMaster
     /// <returns>Return a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
     PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
+    void SetErrorCheck(ErrorCheck errorChk);
+
   private:
     HardwareSerial *masterCom = NULL;
+    char errorCheckAlg = 0;
 };
 
 //Serial Slave class
@@ -141,8 +142,11 @@ class AMASPSerialSlave
     /// <returns>Returns a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
     PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
+    void SetErrorCheck(ErrorCheck errorChk);
+   
   private:
     HardwareSerial *slaveCom = NULL;
+    char errorCheckAlg = 0;
 };
 
 //Auxiliary functions***********
@@ -162,6 +166,14 @@ void intToASCIIHex(int value, char hex[]);
 /// <param name="length">Hexadecimal caracters length.</param>
 /// <returns>Returns the result of the conversion or -1 in a case of invalid number</returns>
 long asciiHexToInt(char hex[], int length);
+
+/// <summary>
+/// XOR Check function (8 bits)
+/// </summary>
+/// <param name="data">Data array to the calculate the LRC. </param>
+/// <param name="dataLength">Data length.</param>
+/// <returns>Returns the calculated LRC value.</returns>
+short XOR(byte* data, int dataLength);
 
 /// <summary>
 /// Longitudinal Redundancy Check function (16 bits)

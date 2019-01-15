@@ -17,31 +17,30 @@ void AMASPSerialMaster::end()
   masterCom = NULL;
 }
 
-int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength, ErrorCheck errorChk)
-{
-   
-}
 
 int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
 {
   char hex[sizeof(int) * 2];
 
   //Mounting the packet
-  byte pkt[MSGMAXSIZE + 14];
+  byte pkt[MSGMAXSIZE + 15];
 
   //Packet Type
   pkt[0] = '!';
   pkt[1] = '?';
+  //ECA
+  intToASCIIHex(errorCheckAlg, hex);
+  pkt[2] = hex[0];
   //Device ID
   intToASCIIHex(deviceID, hex);
-  pkt[2] = hex[2];
-  pkt[3] = hex[1];
-  pkt[4] = hex[0];
+  pkt[3] = hex[2];
+  pkt[4] = hex[1];
+  pkt[5] = hex[0];
   //Message Length
   intToASCIIHex(msgLength, hex);
-  pkt[5] = hex[2];
-  pkt[6] = hex[1];
-  pkt[7] = hex[0];
+  pkt[6] = hex[2];
+  pkt[7] = hex[1];
+  pkt[8] = hex[0];
   //Message (payload)
   for (int i = 0; i < msgLength ; i++)
   {
@@ -49,52 +48,55 @@ int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
   }
   //CRC16
   intToASCIIHex(CRC16SerialModbus(pkt, msgLength + 8), hex);
-  pkt[8 + msgLength] = hex[3];
-  pkt[8 + msgLength + 1] = hex[2];
-  pkt[8 + msgLength + 2] = hex[1];
-  pkt[8 + msgLength + 3] = hex[0];
+  pkt[9 + msgLength] = hex[3];
+  pkt[9 + msgLength + 1] = hex[2];
+  pkt[9 + msgLength + 2] = hex[1];
+  pkt[9 + msgLength + 3] = hex[0];
   //Packet End
-  pkt[8 + msgLength + 4] = '\r';
-  pkt[8 + msgLength + 5] = '\n';
+  pkt[9 + msgLength + 4] = '\r';
+  pkt[9 + msgLength + 5] = '\n';
 
   //sending Request
-  masterCom->write(pkt, 14 + msgLength);
+  masterCom->write(pkt, 15 + msgLength);
 
 }
 
 void AMASPSerialMaster::sendError(int deviceID, int errorCode)
 {
   char hex[sizeof(int) * 2];
-  byte pkt[13];
+  byte pkt[14];
 
   //Packet Type
   pkt[0] = '!';
   pkt[1] = '~';
+  //ECA
+  intToASCIIHex(errorCheckAlg, hex);
+  pkt[2] = hex[0];
   //Device ID
   intToASCIIHex(deviceID, hex);
-  pkt[2] = hex[2];
-  pkt[3] = hex[1];
-  pkt[4] = hex[0];
+  pkt[3] = hex[2];
+  pkt[4] = hex[1];
+  pkt[5] = hex[0];
   //Error Code
   intToASCIIHex(errorCode, hex);
-  pkt[5] = hex[1];
-  pkt[6] = hex[0];
+  pkt[6] = hex[1];
+  pkt[7] = hex[0];
   //CRC16
   intToASCIIHex(CRC16SerialModbus(pkt, 7), hex);
-  pkt[7] = hex[3];
-  pkt[8] = hex[2];
-  pkt[9] = hex[1];
-  pkt[10] = hex[0];
+  pkt[8] = hex[3];
+  pkt[9] = hex[2];
+  pkt[10] = hex[1];
+  pkt[11] = hex[0];
   //Packet End
-  pkt[11] = '\r';
-  pkt[12] = '\n';
+  pkt[12] = '\r';
+  pkt[13] = '\n';
 
   masterCom->write(pkt, 13);
 }
 
 PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &codeLength)
 {
-  byte buf[MSGMAXSIZE + 14];
+  byte buf[MSGMAXSIZE + 15];
   PacketType type;
   byte *endPktPtr;
   int aux;
@@ -115,14 +117,14 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
         //SRP Packet******
         case '#':
           //Reading device ID and msg length
-          if (masterCom->readBytes(&buf[2], 6) == 6)
+          if (masterCom->readBytes(&buf[3], 6) == 6)
           {
             //Extracting device ID
-            deviceID = (int)asciiHexToInt(&buf[2], 3);
+            deviceID = (int)asciiHexToInt(&buf[3], 3);
             if (deviceID != -1)
             {
               //Extracting message length
-              codeLength = asciiHexToInt(&buf[5], 3);
+              codeLength = asciiHexToInt(&buf[6], 3);
               if (codeLength != -1)
               {
                 //Checking the packet size limit
