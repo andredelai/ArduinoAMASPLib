@@ -46,8 +46,9 @@ int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
   {
     pkt[8 + i] = message[i];
   }
-  //CRC16
-  intToASCIIHex(CRC16SerialModbus(pkt, msgLength + 8), hex);
+  //Error checking algorithm
+  intToASCIIHex(errorCheck(pkt, msgLength + 9, errorCheckAlg), hex);
+  //intToASCIIHex(CRC16SerialModbus(pkt, msgLength + 8), hex);
   pkt[9 + msgLength] = hex[3];
   pkt[9 + msgLength + 1] = hex[2];
   pkt[9 + msgLength + 2] = hex[1];
@@ -81,8 +82,8 @@ void AMASPSerialMaster::sendError(int deviceID, int errorCode)
   intToASCIIHex(errorCode, hex);
   pkt[6] = hex[1];
   pkt[7] = hex[0];
-  //CRC16
-  intToASCIIHex(CRC16SerialModbus(pkt, 7), hex);
+  //Error checking algorithm
+  intToASCIIHex(errorCheck(pkt, 8, errorCheckAlg), hex);
   pkt[8] = hex[3];
   pkt[9] = hex[2];
   pkt[10] = hex[1];
@@ -133,11 +134,11 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
                   //Reading message, CRC16 and end packet chars
                   if (masterCom->readBytes(&buf[8], (codeLength) + 6) == (codeLength) + 6)
                   {
-                    //CRC16 checking
+                    //error checking
                     aux = asciiHexToInt(&buf[(codeLength) + 8], 4);
                     if (aux != -1)
                     {
-                      if (aux == CRC16SerialModbus(buf, (codeLength) + 8))
+                      if (aux == errorCheck(buf, codeLength + 8, errorCheckAlg))
                       {
                         //Checking the packet end
                         if (buf[codeLength + 12] == '\r' ||  buf[codeLength + 13] == '\n')
@@ -173,7 +174,8 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
           if (aux != -1)
           {
             //CRC16 check
-            if (aux == CRC16SerialModbus(buf, 7))
+
+            if (aux == errorCheck(buf, 7, errorCheckAlg))
             {
               //Extracting device ID
               deviceID = asciiHexToInt(&buf[2], 3);
@@ -204,7 +206,8 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
           if (aux != -1)
           {
             //CRC16 check
-            if (aux == CRC16SerialModbus(buf, 7))
+            
+            if (aux == errorCheck(buf, 8, errorCheckAlg))
             {
               //Extracting device ID
               deviceID = asciiHexToInt(&buf[2], 3);

@@ -34,30 +34,30 @@ long asciiHexToInt(char hex[], int length)
   return num;
 }
 
-short XOR(byte* data, int dataLength)
+short XORCheck(byte* data, int dataLength)
 {
   char xorCheck = 0;
-  for(int i=0; i<dataLength; i++)
+  for (int i = 0; i < dataLength; i++)
   {
-      xorCheck ^= data[i];
+    xorCheck ^= data[i];
   }
   return (short)xorCheck;
 }
 
 
 //Classical checksum
-short checksum(byte message[], int dataLength)
+short checksum16Check(byte message[], int dataLength)
 {
-    unsigned short sum = 0;
-    while (dataLength-- > 0)
-    {
-        sum += *(message++);
-    }
-    return (sum);
+  unsigned short sum = 0;
+  while (dataLength-- > 0)
+  {
+    sum += *(message++);
+  }
+  return (sum);
 }   /* Sum() */
 
 // LRC 16 bit checksum
-short LRC(byte* data, int dataLength)
+short LRC16Check(byte* data, int dataLength)
 {
   unsigned short lrc = 0;
   for (int i = 0; i < dataLength; i++)
@@ -92,22 +92,53 @@ short CRC16SerialModbus(byte* data, int dataLength)
 // Fletcher 16 bit checksum
 short fletcher16Checksum(byte *data, int dataLength)
 {
-        uint32_t c0, c1;
-        unsigned int i;
+  uint32_t c0, c1;
+  unsigned int i;
 
-        for (c0 = c1 = 0; dataLength >= 5802; dataLength -= 5802) {
-                for (i = 0; i < 5802; ++i) {
-                        c0 = c0 + *data++;
-                        c1 = c1 + c0;
-                }
-                c0 = c0 % 255;
-                c1 = c1 % 255;
-        }
-        for (i = 0; i < dataLength; ++i) {
-                c0 = c0 + *data++;
-                c1 = c1 + c0;
-        }
-        c0 = c0 % 255;
-        c1 = c1 % 255;
-        return (c1 << 8 | c0);
+  for (c0 = c1 = 0; dataLength >= 5802; dataLength -= 5802) {
+    for (i = 0; i < 5802; ++i) {
+      c0 = c0 + *data++;
+      c1 = c1 + c0;
+    }
+    c0 = c0 % 255;
+    c1 = c1 % 255;
+  }
+  for (i = 0; i < dataLength; ++i) {
+    c0 = c0 + *data++;
+    c1 = c1 + c0;
+  }
+  c0 = c0 % 255;
+  c1 = c1 % 255;
+  return (c1 << 8 | c0);
+}
+
+short errorCheck(byte *data, int dataLength, int errorCheckAlg)
+{
+  switch (errorCheckAlg)
+  {
+    case 1:
+      return XORCheck(data, dataLength + 8);
+      break;
+
+    case 2:
+      return checksum16Check(data, dataLength + 8);
+      break;
+
+    case 3:
+      return LRC16Check(data, dataLength + 8);
+      break;
+
+    case 4:
+      return fletcher16Checksum(data, dataLength + 8);
+      break;
+
+    case 5:
+      return CRC16SerialModbus(data, dataLength + 8);
+      break;
+
+    default:
+      return 0x00;
+      break;
+
+  }
 }

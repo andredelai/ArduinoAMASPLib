@@ -25,7 +25,7 @@
 /// <summary>
 /// Maximum number of bytes per message on Arduino.
 /// </summary>
-#define MSGMAXSIZE 128
+#define MSGMAXSIZE 64
 
 ///<sumary>
 ///AMASP Packet types returned by readPacket function.
@@ -46,18 +46,18 @@ class AMASPSerialMaster
     ///Constructor
     /// </summary>
     AMASPSerialMaster();
-    
+
     /// <summary>
     /// Initializes the master connecting it to the serial link.
     /// </summary>
     /// <param name="serial">Serial communication object. </param>
     void begin(HardwareSerial &serial);
-    
+
     /// <summary>
     /// Finalizes the master disconnect it from the serial link.
     /// </summary>
     void end();
-    
+
     //Send a MRP packet
     /// <summary>
     /// Send a MRP (Master Request Packet).
@@ -66,14 +66,14 @@ class AMASPSerialMaster
     /// <param name="message">Message to be send to the associated device.</param>
     /// <param name="msgLength">Message length in bytes.</param>
     int sendRequest(int deviceID, byte message[], int msgLength);
-    
+
     /// <summary>
     /// Send a CEP (Communication Error Packet).
     /// </summary>
     /// <param name="deviceID">Device identification. </param>
     /// <param name="errorCode">The communication error code.</param>
     void sendError(int device, int errorCode);
-    
+
     /// <summary>
     /// Read the incoming AMASP packet.
     /// </summary>
@@ -98,18 +98,18 @@ class AMASPSerialSlave
     ///Constructor
     /// </summary>
     AMASPSerialSlave();
-    
+
     /// <summary>
     /// Initializes the slave connecting it to the serial link.
     /// </summary>
     /// <param name="serial">Serial communication object. </param>
     void begin(HardwareSerial &serial);
-    
+
     /// <summary>
     /// Finalizes the slave disconnect it from the serial link.
     /// </summary>
     void end();
-    
+
     //Send a SRP packet
     /// <summary>
     /// Send a SRP (Slave Response Packet).
@@ -118,20 +118,20 @@ class AMASPSerialSlave
     /// <param name="message">Message to be send from the associated device.</param>
     /// <param name="msgLength">Message length in bytes.</param>
     void sendResponse(int deviceID, byte message[], int msgLength);
-    
+
     /// <summary>
     /// Send a SIP (Slave Interruption Packet).
     /// </summary>
     /// <param name="deviceID">Device identification. </param>
     /// <param name="errorCode">The interruption code.</param>
-    
+
     void sendInterruption(int deviceID, int code);
     /// <summary>
     /// Send a CEP (Communication Error Packet).
     /// </summary>
     /// <param name="deviceID">Device identification. </param>
     /// <param name="errorCode">The communication error code.</param>
-    
+
     void sendError(int Device, int code);
     /// <summary>
     /// Read the incoming AMASP packet.
@@ -143,7 +143,7 @@ class AMASPSerialSlave
     PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
     void SetErrorCheck(ErrorCheck errorChk);
-   
+
   private:
     HardwareSerial *slaveCom = NULL;
     char errorCheckAlg = 0;
@@ -168,43 +168,13 @@ void intToASCIIHex(int value, char hex[]);
 long asciiHexToInt(char hex[], int length);
 
 /// <summary>
-/// XOR Check function (8 bits)
+/// Error checking function (16 bits)
 /// </summary>
 /// <param name="data">Data array to the calculate the LRC. </param>
 /// <param name="dataLength">Data length.</param>
+/// <param name="errorCheckAlg">The choosed error check algorithm.</param>
 /// <returns>Returns the calculated LRC value.</returns>
-short XOR(byte* data, int dataLength);
+short errorCheck(byte *data, int dataLength, int errorCheckAlg);
 
-/// <summary>
-/// Longitudinal Redundancy Check function (16 bits)
-/// </summary>
-/// <param name="data">Data array to the calculate the LRC. </param>
-/// <param name="dataLength">Data length.</param>
-/// <returns>Returns the calculated LRC value.</returns>
-short LRC(byte* data, int dataLength);
-
-/// <summary>
-/// Classic checksum (16 bits)
-/// </summary>
-/// <param name="data">Data array to the calculate the checksum. </param>
-/// <param name="dataLength">Data length.</param>
-/// <returns>Returns the calculated checksum value.</returns>
-short checksum(byte message[], int dataLength);
-
-/// <summary>
-/// Fletcher checksum (16 bits)
-/// </summary>
-/// <param name="data">Data array to the calculate the Fletcher checksum. </param>
-/// <param name="dataLength">Data length.</param>
-/// <returns>Returns the calculated Fletcher checksum value.</returns>
-short fletcher16Checksum(byte *data, int dataLength);
-
-/// <summary>
-/// Cyclic Redundancy Check function (16 bits)
-/// </summary>
-/// <param name="data">Data array to the calculate the LRC. </param>
-/// <param name="dataLength">Data length.</param>
-/// <returns>Returns the calculated LRC value.</returns>
-short CRC16SerialModbus(byte* data, int dataLength);
 
 #endif
