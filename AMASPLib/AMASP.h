@@ -36,7 +36,7 @@
 ///Timeout - No packet found
 /// </summary>
 enum PacketType {MRP = 0, SRP, SIP, CEP, Timeout};
-enum ErrorCheck {None = 0, XOR8, checksum16, LRC16, fletcher16, CRC16};
+enum ErrorCheck {none = 0, XOR8, checksum16, LRC16, fletcher16, CRC16};
 
 //Serial Master class
 class AMASPSerialMaster

@@ -44,7 +44,7 @@ int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
   //Message (payload)
   for (int i = 0; i < msgLength ; i++)
   {
-    pkt[8 + i] = message[i];
+    pkt[9 + i] = message[i];
   }
   //Error checking algorithm
   intToASCIIHex(errorCheck(pkt, msgLength + 9, errorCheckAlg), hex);
@@ -236,4 +236,9 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
   }
   masterCom->print("timeout");
   return Timeout;
+}
+
+void AMASPSerialMaster::SetErrorCheck(ErrorCheck errorChk)
+{
+  errorCheckAlg = errorChk;
 }

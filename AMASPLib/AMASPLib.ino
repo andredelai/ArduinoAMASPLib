@@ -11,44 +11,68 @@
 //CEP - Communication Error Packet
 //Timeout - No packet found
 
-
-AMASPSerialSlave slave;
-int device = 0x000;
+AMASPSerialMaster master;
+//AMASPSerialSlave slave;
+int device = 0x00A;
 int codeLength = 0x000;
 PacketType type;
 byte data[MSGMAXSIZE];
+byte payload[5]{'H','E','L','L','0'};
 
 void setup()
 {
   //Serial and AMASP setup
   Serial.begin(9600);
   Serial.flush();
-  slave.begin(Serial); 
+  //slave.begin(Serial);
+  master.begin(Serial);
+  
+  master.SetErrorCheck(none);
+  master.sendRequest(device, payload, 5);
+  
+  master.SetErrorCheck(XOR8);
+  master.sendRequest(device, payload, 5);
+
+  master.SetErrorCheck(checksum16);
+  master.sendRequest(device, payload, 5);
+
+  master.SetErrorCheck(LRC16);
+  master.sendRequest(device, payload, 5);
+
+  master.SetErrorCheck(fletcher16);
+  master.sendRequest(device, payload, 5);
+
+  master.SetErrorCheck(CRC16);
+  master.sendRequest(device, payload, 5);
+   
 }
 
 void loop() {
+
+ 
+  
   // Listening serial interface...
-  if (Serial.available() > 0)
-  {
-    type = slave.readPacket(device, data, codeLength);
-    switch (type)
-    {
-      case MRP:        
-        slave.sendResponse(device, data, codeLength);
-        break;
-      
-      case CEP:
-        //Echo
-        slave.sendError(device, codeLength);
-        break;
-
-      case SIP:
-        slave.sendInterruption(device, codeLength);
-        break;
-
-      case Timeout:
-        Serial.println("Timeout");
-        break;
-    }
-  }
+//  if (Serial.available() > 0)
+//  {
+//    type = slave.readPacket(device, data, codeLength);
+//    switch (type)
+//    {
+//      case MRP:        
+//        slave.sendResponse(device, data, codeLength);
+//        break;
+//      
+//      case CEP:
+//        //Echo
+//        slave.sendError(device, codeLength);
+//        break;
+//
+//      case SIP:
+//        slave.sendInterruption(device, codeLength);
+//        break;
+//
+//      case Timeout:
+//        Serial.println("Timeout");
+//        break;
+//    }
+//  }
 }

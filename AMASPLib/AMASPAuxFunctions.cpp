@@ -117,23 +117,23 @@ short errorCheck(byte *data, int dataLength, int errorCheckAlg)
   switch (errorCheckAlg)
   {
     case 1:
-      return XORCheck(data, dataLength + 8);
+      return XORCheck(data, dataLength);
       break;
 
     case 2:
-      return checksum16Check(data, dataLength + 8);
+      return checksum16Check(data, dataLength);
       break;
 
     case 3:
-      return LRC16Check(data, dataLength + 8);
+      return LRC16Check(data, dataLength);
       break;
 
     case 4:
-      return fletcher16Checksum(data, dataLength + 8);
+      return fletcher16Checksum(data, dataLength);
       break;
 
     case 5:
-      return CRC16SerialModbus(data, dataLength + 8);
+      return CRC16SerialModbus(data, dataLength);
       break;
 
     default:

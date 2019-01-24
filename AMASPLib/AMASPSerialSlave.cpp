@@ -41,7 +41,7 @@ void AMASPSerialSlave::sendResponse(int deviceID, byte message[], int msgLength)
   //Message (payload)
   for (int i = 0; i < msgLength ; i++)
   {
-    pkt[8 + i] = message[i];
+    pkt[9 + i] = message[i];
   }
   //errorChecking
 
