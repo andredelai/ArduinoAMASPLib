@@ -17,15 +17,19 @@ int device = 0x00A;
 int codeLength = 0x000;
 PacketType type;
 byte data[MSGMAXSIZE];
-byte payload[5]{'H','E','L','L','0'};
+byte payload[20] {'H','E','L','L','O'};
 
 void setup()
 {
+  short ret;
   //Serial and AMASP setup
   Serial.begin(9600);
   Serial.flush();
   //slave.begin(Serial);
   master.begin(Serial);
+
+  //ret = XORCheck2(payload, 14);
+  //Serial.print(ret);
   
   master.SetErrorCheck(none);
   master.sendRequest(device, payload, 5);

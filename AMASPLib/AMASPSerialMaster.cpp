@@ -47,6 +47,7 @@ int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
     pkt[9 + i] = message[i];
   }
   //Error checking algorithm
+  //masterCom->write(pkt, msgLength + 9);
   intToASCIIHex(errorCheck(pkt, msgLength + 9, errorCheckAlg), hex);
   //intToASCIIHex(CRC16SerialModbus(pkt, msgLength + 8), hex);
   pkt[9 + msgLength] = hex[3];
