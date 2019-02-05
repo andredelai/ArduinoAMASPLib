@@ -36,7 +36,7 @@ long asciiHexToInt(char hex[], int length)
 
 short XORCheck(byte* data, int dataLength)
 {
-  char xorCheck = 0;
+  byte xorCheck = 0;
   for (int i = 0; i < dataLength; i++)
   {
     xorCheck ^= data[i];
@@ -68,7 +68,7 @@ short LRC16Check(byte* data, int dataLength)
   return lrc;
 }
 
-// Compute the MODBUS RTU CRC
+// CRC16 check
 short CRC16SerialModbus(byte* data, int dataLength)
 {
   unsigned short crc = (short) 0xFFFF;
@@ -77,11 +77,14 @@ short CRC16SerialModbus(byte* data, int dataLength)
 
     for (int i = 8; i != 0; i--) // Loop over each bit
     {
-      crc >>= 1;
-      crc &= 0x7FFF;
       if ((crc & 0x0001) != 0) // If the LSB is set
       {
+        crc >>= 1;
         crc ^= 0xA001; // Polynomial
+      }
+      else
+      {
+        crc >>= 1;
       }
     }
   }
