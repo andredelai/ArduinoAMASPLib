@@ -67,56 +67,62 @@ void AMASPSerialSlave::sendInterruption(int deviceID, int code)
   //Packet Type
   pkt[0] = '!';
   pkt[1] = '!';
+  //ECA
+  intToASCIIHex(errorCheckAlg, hex);
+  pkt[2] = hex[0];
   //Device ID
   intToASCIIHex(deviceID, hex);
-  pkt[2] = hex[2];
-  pkt[3] = hex[1];
-  pkt[4] = hex[0];
-  //Error Code
-  intToASCIIHex(code, hex);
-  pkt[5] = hex[1];
-  pkt[6] = hex[0];
-  //error check
+  pkt[3] = hex[2];
+  pkt[4] = hex[1];
+  pkt[5] = hex[0];
+  //Interruption Code
+  //intToASCIIHex(errorCode, hex);
+  pkt[6] = hex[1];
+  pkt[7] = hex[0];
+  //Error checking algorithm
   intToASCIIHex(errorCheck(pkt, 8, errorCheckAlg), hex);
-  pkt[7] = hex[3];
-  pkt[8] = hex[2];
-  pkt[9] = hex[1];
-  pkt[10] = hex[0];
+  pkt[8] = hex[3];
+  pkt[9] = hex[2];
+  pkt[10] = hex[1];
+  pkt[11] = hex[0];
   //Packet End
-  pkt[11] = '\r';
-  pkt[12] = '\n';
+  pkt[12] = '\r';
+  pkt[13] = '\n';
 
-  slaveCom->write(pkt, 13);
+  slaveCom->write(pkt, 14);
 }
 
 void AMASPSerialSlave::sendError(int deviceID, int errorCode)
 {
-  char hex[sizeof(int) * 2];
-  byte pkt[13];
+ char hex[sizeof(int) * 2];
+  byte pkt[14];
 
   //Packet Type
   pkt[0] = '!';
   pkt[1] = '~';
+  //ECA
+  intToASCIIHex(errorCheckAlg, hex);
+  pkt[2] = hex[0];
   //Device ID
   intToASCIIHex(deviceID, hex);
-  pkt[2] = hex[2];
-  pkt[3] = hex[1];
-  pkt[4] = hex[0];
+  pkt[3] = hex[2];
+  pkt[4] = hex[1];
+  pkt[5] = hex[0];
   //Error Code
   intToASCIIHex(errorCode, hex);
-  pkt[5] = hex[1];
-  pkt[6] = hex[0];
-  //error check
+  pkt[6] = hex[1];
+  pkt[7] = hex[0];
+  //Error checking algorithm
   intToASCIIHex(errorCheck(pkt, 8, errorCheckAlg), hex);
-  pkt[7] = hex[3];
-  pkt[8] = hex[2];
-  pkt[9] = hex[1];
-  pkt[10] = hex[0];
+  pkt[8] = hex[3];
+  pkt[9] = hex[2];
+  pkt[10] = hex[1];
+  pkt[11] = hex[0];
   //Packet End
-  pkt[11] = '\r';
-  pkt[12] = '\n';
+  pkt[12] = '\r';
+  pkt[13] = '\n';
 
-  slaveCom->write(pkt, 13);
+  slaveCom->write(pkt, 14);
 }
 
 PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &codeLength)

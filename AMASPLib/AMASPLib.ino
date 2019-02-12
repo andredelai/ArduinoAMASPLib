@@ -31,23 +31,23 @@ void setup()
   //ret = XORCheck2(payload, 14);
   //Serial.print(ret);
   
-  master.SetErrorCheck(none);
-  master.sendRequest(device, payload, 5);
-  
-  master.SetErrorCheck(XOR8);
-  master.sendRequest(device, payload, 5);
+//  master.SetErrorCheck(none);
+//  master.sendRequest(device, payload, 5);
+//  
+//  master.SetErrorCheck(XOR8);
+//  master.sendRequest(device, payload, 5);
+//
+//  master.SetErrorCheck(checksum16);
+//  master.sendRequest(device, payload, 5);
+//
+//  master.SetErrorCheck(LRC16);
+//  master.sendRequest(device, payload, 5);
 
-  master.SetErrorCheck(checksum16);
-  master.sendRequest(device, payload, 5);
+//  master.SetErrorCheck(fletcher16);
+//  master.sendRequest(device, payload, 5);
 
-  master.SetErrorCheck(LRC16);
-  master.sendRequest(device, payload, 5);
-
-  master.SetErrorCheck(fletcher16);
-  master.sendRequest(device, payload, 5);
-
-  master.SetErrorCheck(CRC16);
-  master.sendRequest(device, payload, 5);
+    master.SetErrorCheck(none);
+    master.sendError(device, 0xA2);
    
 }
 

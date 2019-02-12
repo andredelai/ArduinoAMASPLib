@@ -93,7 +93,7 @@ void AMASPSerialMaster::sendError(int deviceID, int errorCode)
   pkt[12] = '\r';
   pkt[13] = '\n';
 
-  masterCom->write(pkt, 13);
+  masterCom->write(pkt, 14);
 }
 
 PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &codeLength)
