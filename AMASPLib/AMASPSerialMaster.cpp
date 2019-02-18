@@ -109,10 +109,15 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
     if (buf[0] == '!')
     {
       //Reading packet type
-      if (masterCom->readBytes(&buf[1], 1) != 1)
+      if (masterCom->readBytes(&buf[1], 5) != 5)
       {
         return Timeout;
       }
+      if (buf[2] < '0' || buf[3] > '5')
+      {
+        return Timeout;
+      }
+            
       //Verifing type
       switch (buf[1])
       {
