@@ -43,11 +43,6 @@ class AMASPSerialMaster
 {
   public:
     /// <summary>
-    ///Constructor
-    /// </summary>
-    AMASPSerialMaster();
-
-    /// <summary>
     /// Initializes the master connecting it to the serial link.
     /// </summary>
     /// <param name="serial">Serial communication object. </param>
@@ -94,11 +89,6 @@ class AMASPSerialMaster
 class AMASPSerialSlave
 {
   public:
-    /// <summary>
-    ///Constructor
-    /// </summary>
-    AMASPSerialSlave();
-
     /// <summary>
     /// Initializes the slave connecting it to the serial link.
     /// </summary>

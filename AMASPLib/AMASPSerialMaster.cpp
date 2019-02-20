@@ -1,11 +1,6 @@
 #include "Arduino.h"
 #include "AMASP.h"
 
-//Constructor
-AMASPSerialMaster::AMASPSerialMaster()
-{
-
-}
 
 void AMASPSerialMaster:: begin(HardwareSerial &serial)
 {
@@ -100,7 +95,7 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
 {
   byte buf[MSGMAXSIZE + 15];
   PacketType type;
-  byte *endPktPtr;
+  ErrorCheck eca;
   int aux;
 
   //Searching for a packet in serial buffer (starts with !).
@@ -108,7 +103,7 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
   {
     if (buf[0] == '!')
     {
-      //Reading packet type
+      //Reading packet type, ECA and device ID bytes
       if (masterCom->readBytes(&buf[1], 5) != 5)
       {
         return Timeout;
@@ -117,130 +112,149 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
       {
         return Timeout;
       }
-            
-      //Verifing type
+
+      //Extracting ECA
+      eca = asciiHexToInt(&buf[2], 1);
+
+      //Extracting device ID
+      deviceID = (int)asciiHexToInt(&buf[3], 3);
+      if (deviceID == -1)
+      {
+        return Timeout;
+      }
+
+      //Verifing packet type
       switch (buf[1])
       {
-        //SRP Packet******
+        //SRP Packet detected ----------
         case '#':
           //Reading device ID and msg length
-          if (masterCom->readBytes(&buf[3], 6) == 6)
-          {
-            //Extracting device ID
-            deviceID = (int)asciiHexToInt(&buf[3], 3);
-            if (deviceID != -1)
-            {
-              //Extracting message length
-              codeLength = asciiHexToInt(&buf[6], 3);
-              if (codeLength != -1)
-              {
-                //Checking the packet size limit
-                if (codeLength <= MSGMAXSIZE || codeLength != 0)
-                {
-                  //Reading message, CRC16 and end packet chars
-                  if (masterCom->readBytes(&buf[8], (codeLength) + 6) == (codeLength) + 6)
-                  {
-                    //error checking
-                    aux = asciiHexToInt(&buf[(codeLength) + 8], 4);
-                    if (aux != -1)
-                    {
-                      if (aux == errorCheck(buf, codeLength + 8, errorCheckAlg))
-                      {
-                        //Checking the packet end
-                        if (buf[codeLength + 12] == '\r' ||  buf[codeLength + 13] == '\n')
-                        {
-                          //Extracting message
-                          memcpy(message, &buf[8], codeLength);
-                          return SRP;//SRP recognized
-                        }
-                      }
-                    }
-                  }
-                  else
-                  {
-                    return Timeout;
-                  }
-                }
-              }
-            }
-          }
-          else
+          if (masterCom->readBytes(&buf[6], 3) != 3)
           {
             return Timeout;
           }
+          //Extracting message length
+          codeLength = asciiHexToInt(&buf[6], 3);
+          if (codeLength == -1)
+          {
+            return Timeout;
+          }
+          //Checking the packet size value
+          if (codeLength == 0 || codeLength > MSGMAXSIZE)
+          {
+            return Timeout;
+          }
+          //Reading message, error checking and end packet bytes
+          if (masterCom->readBytes(&buf[9], (codeLength) + 6) != (codeLength) + 6)
+          {
+            return Timeout;
+          }
+
+          //Extracting error checking bytes
+          aux = asciiHexToInt(&buf[(codeLength) + 9], 4);
+          if (aux == -1)
+          {
+            return Timeout;
+          }
+
+          // Error checking
+          if (aux != errorCheck(buf, codeLength + 8, eca))
+          {
+            return Timeout;
+          }
+
+          //Checking the packet end
+          if (buf[codeLength + 13] != '\r' ||  buf[codeLength + 14] != '\n')
+          {
+            return Timeout;
+          }
+
+          //Extracting message
+          memcpy(message, &buf[9], codeLength);
+
+          //SRP recognized
+          return SRP;
+
           break;
 
-        //SIP Packet******
+        //SIP Packet detected ----------
         case '!':
-          if (masterCom->readBytes(&buf[2], 11) != 11)
+          if (masterCom->readBytes(&buf[6], 8) != 8)
           {
             return Timeout;
           }
-          aux = asciiHexToInt(&buf[7], 4);
-          if (aux != -1)
-          {
-            //CRC16 check
 
-            if (aux == errorCheck(buf, 7, errorCheckAlg))
-            {
-              //Extracting device ID
-              deviceID = asciiHexToInt(&buf[2], 3);
-              if (deviceID != -1)
-              {
-                //Reading interrupt code
-                codeLength = asciiHexToInt(&buf[5], 2);
-                if (codeLength != -1)
-                {
-                  //Checking the packet end
-                  if (buf[11] == '\r' ||  buf[12] == '\n')
-                  {
-                    return SIP; //SIP recognized
-                  }
-                }
-              }
-            }
+          //Extracting error checking bytes
+          aux = asciiHexToInt(&buf[8], 4);
+          if (aux == -1)
+          {
+            return Timeout;
           }
+
+          //error checking
+          if (aux == errorCheck(buf, 8, eca))
+          {
+            return Timeout;
+          }
+          
+          //Reading interrupt code
+          codeLength = asciiHexToInt(&buf[6], 2);
+          if (codeLength == -1)
+          {
+            return Timeout;
+          }
+
+          //Checking the packet end
+          if (buf[12] != '\r' ||  buf[13] != '\n')
+          {
+            return Timeout;
+          }
+          
+          return SIP; //SIP recognized
           break;
 
-        //CEP Packet*****
+        //CEP Packet detected ----------
         case '~':
-          if (masterCom->readBytes(&buf[2], 11) != 11)
+          if (masterCom->readBytes(&buf[6], 8) != 8)
           {
             return Timeout;
           }
-          aux = asciiHexToInt(&buf[7], 4);
-          if (aux != -1)
+
+          //Extracting error checking bytes
+          aux = asciiHexToInt(&buf[8], 4);
+          if (aux == -1)
           {
-            //CRC16 check
-            
-            if (aux == errorCheck(buf, 8, errorCheckAlg))
-            {
-              //Extracting device ID
-              deviceID = asciiHexToInt(&buf[2], 3);
-              if (deviceID != -1)
-              {
-                //Reading interrupt code
-                codeLength = asciiHexToInt(&buf[5], 2);
-                if (codeLength != -1)
-                {
-                  //Checking the packet end
-                  if (buf[11] == '\r' ||  buf[12] == '\n')
-                  {
-                    return CEP; //CEP recognized
-                  }
-                }
-              }
-            }
+            return Timeout;
           }
+
+          //error checking
+          if (aux == errorCheck(buf, 8, eca))
+          {
+            return Timeout;
+          }
+          
+          //Reading interrupt code
+          codeLength = asciiHexToInt(&buf[6], 2);
+          if (codeLength == -1)
+          {
+            return Timeout;
+          }
+
+          //Checking the packet end
+          if (buf[12] != '\r' ||  buf[13] != '\n')
+          {
+            return Timeout;
+          }
+          
+          return CEP; //SIP recognized
           break;
 
-        default:
-          //It´s not a valid packet, the search continues...
+          default:
+          return Timeout;
           break;
       }
     }
   }
-  masterCom->print("timeout");
   return Timeout;
 }
 
