@@ -228,7 +228,7 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
           }
 
           //error checking
-          if (aux == errorCheck(buf, 8, eca))
+          if (aux != errorCheck(buf, 8, eca))
           {
             return Timeout;
           }

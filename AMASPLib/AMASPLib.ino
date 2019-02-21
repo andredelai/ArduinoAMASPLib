@@ -73,7 +73,7 @@ void loop() {
         break;
 
       case Timeout:
-        Serial.println("Timeout");
+        //Serial.println("Timeout");
         break;
     }
   }

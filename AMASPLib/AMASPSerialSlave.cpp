@@ -232,7 +232,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           }
 
           //error checking
-          if (aux == errorCheck(buf, 8, eca))
+          if (aux != errorCheck(buf, 8, eca))
           {
             return Timeout;
           }
@@ -264,12 +264,16 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           aux = asciiHexToInt(&buf[8], 4);
           if (aux == -1)
           {
+            slaveCom->println("Error check bytes extraction error");
             return Timeout;
           }
 
           //error checking
-          if (aux == errorCheck(buf, 8, eca))
+          if (aux != errorCheck(buf, 8, eca))
           {
+            slaveCom->println(aux);
+            slaveCom->println(eca);
+            slaveCom->println("Error check fail");
             return Timeout;
           }
           
@@ -277,12 +281,14 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           codeLength = asciiHexToInt(&buf[6], 2);
           if (codeLength == -1)
           {
+            slaveCom->println("Interrupt code extraction error");
             return Timeout;
           }
 
           //Checking the packet end
           if (buf[12] != '\r' ||  buf[13] != '\n')
           {
+            slaveCom->println("End packet chars error");
             return Timeout;
           }
           
