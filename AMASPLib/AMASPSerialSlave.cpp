@@ -73,7 +73,7 @@ void AMASPSerialSlave::sendInterruption(int deviceID, int code)
   pkt[4] = hex[1];
   pkt[5] = hex[0];
   //Interruption Code
-  //intToASCIIHex(errorCode, hex);
+  intToASCIIHex(code, hex);
   pkt[6] = hex[1];
   pkt[7] = hex[0];
   //Error checking algorithm
@@ -91,7 +91,7 @@ void AMASPSerialSlave::sendInterruption(int deviceID, int code)
 
 void AMASPSerialSlave::sendError(int deviceID, int errorCode)
 {
- char hex[sizeof(int) * 2];
+  char hex[sizeof(int) * 2];
   byte pkt[14];
 
   //Packet Type
@@ -124,7 +124,7 @@ void AMASPSerialSlave::sendError(int deviceID, int errorCode)
 
 PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &codeLength)
 {
-    byte buf[MSGMAXSIZE + 15];
+  byte buf[MSGMAXSIZE + 15];
   PacketType type;
   ErrorCheck eca;
   int aux;
@@ -144,7 +144,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
       {
         return Timeout;
       }
-      
+
       //slaveCom->print("Extraindo ECA\r\n");
       //Extracting ECA
       eca = asciiHexToInt(&buf[2], 1);
@@ -159,7 +159,228 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
       //Verifing packet type
       switch (buf[1])
       {
+        //MRP Packet detected ----------
+        case '?':
+          //slaveCom->print("Tipo de pacote detectado = ? \r\n");
+          //Reading device ID and msg length
+          if (slaveCom->readBytes(&buf[6], 3) != 3)
+          {
+            return Timeout;
+          }
+          //Extracting message length
+          codeLength = asciiHexToInt(&buf[6], 3);
+          if (codeLength == -1)
+          {
+            return Timeout;
+          }
+          //Checking the packet size value
+          if (codeLength == 0 || codeLength > MSGMAXSIZE)
+          {
+            return Timeout;
+          }
+          //Reading message, error checking and end packet bytes
+          if (slaveCom->readBytes(&buf[9], (codeLength) + 6) != (codeLength) + 6)
+          {
+            return Timeout;
+          }
+
+          //Extracting error checking bytes
+          aux = asciiHexToInt(&buf[(codeLength) + 9], 4);
+          if (aux == -1)
+          {
+            return Timeout;
+          }
+
+          // Error checking
+          if (aux != errorCheck(buf, codeLength + 9, eca))
+          {
+            return Timeout;
+          }
+
+          //Checking the packet end
+          if (buf[codeLength + 13] != '\r' ||  buf[codeLength + 14] != '\n')
+          {
+            return Timeout;
+          }
+
+          //Extracting message
+          memcpy(message, &buf[9], codeLength);
+
+          //SRP recognized
+          return MRP;
+
+          break;
+
         //SRP Packet detected ----------
+        case '#':
+          //slaveCom->print("Tipo de pacote detectado = ? \r\n");
+          //Reading device ID and msg length
+          if (slaveCom->readBytes(&buf[6], 3) != 3)
+          {
+            return Timeout;
+          }
+          //Extracting message length
+          codeLength = asciiHexToInt(&buf[6], 3);
+          if (codeLength == -1)
+          {
+            return Timeout;
+          }
+          //Checking the packet size value
+          if (codeLength == 0 || codeLength > MSGMAXSIZE)
+          {
+            return Timeout;
+          }
+          //Reading message, error checking and end packet bytes
+          if (slaveCom->readBytes(&buf[9], (codeLength) + 6) != (codeLength) + 6)
+          {
+            return Timeout;
+          }
+
+          //Extracting error checking bytes
+          aux = asciiHexToInt(&buf[(codeLength) + 9], 4);
+          if (aux == -1)
+          {
+            return Timeout;
+          }
+
+          // Error checking
+          if (aux != errorCheck(buf, codeLength + 9, eca))
+          {
+            return Timeout;
+          }
+
+          //Checking the packet end
+          if (buf[codeLength + 13] != '\r' ||  buf[codeLength + 14] != '\n')
+          {
+            return Timeout;
+          }
+
+          //Extracting message
+          memcpy(message, &buf[9], codeLength);
+
+          //SRP recognized
+          return SRP;
+
+          break;
+
+        //SIP Packet detected ----------
+        case '!':
+          if (slaveCom->readBytes(&buf[6], 8) != 8)
+          {
+            slaveCom->println("Error leitura dos 8 bites");
+            return Timeout;
+          }
+
+          //Extracting error checking bytes
+          aux = asciiHexToInt(&buf[8], 4);
+          if (aux == -1)
+          {
+            return Timeout;
+          }
+
+          //error checking
+          if (aux != errorCheck(buf, 8, eca))
+          {
+            return Timeout;
+          }
+
+          //Reading interruption code
+          codeLength = asciiHexToInt(&buf[6], 2);
+          if (codeLength == -1)
+          {
+            return Timeout;
+          }
+
+          //Checking the packet end
+          if (buf[12] != '\r' ||  buf[13] != '\n')
+          {
+            return Timeout;
+          }
+
+          return SIP; //SIP recognized
+          break;
+
+        //CEP Packet detected ----------
+        case '~':
+          if (slaveCom->readBytes(&buf[6], 8) != 8)
+          {
+            return Timeout;
+          }
+
+          //Extracting error checking bytes
+          aux = asciiHexToInt(&buf[8], 4);
+          if (aux == -1)
+          {
+            return Timeout;
+          }
+
+          //error checking
+          if (aux != errorCheck(buf, 8, eca))
+          {
+            return Timeout;
+          }
+
+          //Reading error code
+          codeLength = asciiHexToInt(&buf[6], 2);
+          if (codeLength == -1)
+          {
+            return Timeout;
+          }
+
+          //Checking the packet end
+          if (buf[12] != '\r' ||  buf[13] != '\n')
+          {
+            return Timeout;
+          }
+
+          return CEP; //SIP recognized
+          break;
+
+        default:
+          return Timeout;
+          break;
+      }
+    }
+  }
+  return Timeout;
+
+}
+
+PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &codeLength, ErrorCheck &eca)
+{
+  byte buf[MSGMAXSIZE + 15];
+  PacketType type;
+  int aux;
+
+  //Searching for a packet in serial buffer (starts with !).
+  while (slaveCom->readBytes(buf, 1) != 0)
+  {
+    if (buf[0] == '!')
+    {
+      //Reading packet type, ECA and device ID bytes
+      if (slaveCom->readBytes(&buf[1], 5) != 5)
+      {
+        return Timeout;
+      }
+      if (buf[2] < '0' || buf[3] > '5')
+      {
+        return Timeout;
+      }
+
+      //Extracting ECA
+      eca = asciiHexToInt(&buf[2], 1);
+
+      //Extracting device ID
+      deviceID = (int)asciiHexToInt(&buf[3], 3);
+      if (deviceID == -1)
+      {
+        return Timeout;
+      }
+
+      //Verifing packet type
+      switch (buf[1])
+      {
+        //MRP Packet detected ----------
         case '?':
           //slaveCom->print("Tipo de pacote detectado = ? \r\n");
           //Reading device ID and msg length
@@ -191,21 +412,18 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           aux = asciiHexToInt(&buf[(codeLength) + 9], 4);
           if (aux == -1)
           {
-            //slaveCom->print("Erro de extração do valor de checagem de erro\r\n");
             return Timeout;
           }
 
           // Error checking
-          if (aux != errorCheck(buf, codeLength + 8, eca))
+          if (aux != errorCheck(buf, codeLength + 9, eca))
           {
-            //slaveCom->print("Falha na checagem de erro\r\n");
             return Timeout;
           }
 
           //Checking the packet end
           if (buf[codeLength + 13] != '\r' ||  buf[codeLength + 14] != '\n')
           {
-            slaveCom->print("Caracteres de fim de pacote não reconhecidos\r\n");
             return Timeout;
           }
 
@@ -214,6 +432,57 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
 
           //SRP recognized
           return MRP;
+
+          break;
+
+        //SRP Packet detected ----------
+        case '#':
+          //Reading device ID and msg length
+          if (slaveCom->readBytes(&buf[6], 3) != 3)
+          {
+            return Timeout;
+          }
+          //Extracting message length
+          codeLength = asciiHexToInt(&buf[6], 3);
+          if (codeLength == -1)
+          {
+            return Timeout;
+          }
+          //Checking the packet size value
+          if (codeLength == 0 || codeLength > MSGMAXSIZE)
+          {
+            return Timeout;
+          }
+          //Reading message, error checking and end packet bytes
+          if (slaveCom->readBytes(&buf[9], (codeLength) + 6) != (codeLength) + 6)
+          {
+            return Timeout;
+          }
+
+          //Extracting error checking bytes
+          aux = asciiHexToInt(&buf[(codeLength) + 9], 4);
+          if (aux == -1)
+          {
+            return Timeout;
+          }
+
+          // Error checking
+          if (aux != errorCheck(buf, codeLength + 9, eca))
+          {
+            return Timeout;
+          }
+
+          //Checking the packet end
+          if (buf[codeLength + 13] != '\r' ||  buf[codeLength + 14] != '\n')
+          {
+            return Timeout;
+          }
+
+          //Extracting message
+          memcpy(message, &buf[9], codeLength);
+
+          //SRP recognized
+          return SRP;
 
           break;
 
@@ -236,7 +505,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           {
             return Timeout;
           }
-          
+
           //Reading interrupt code
           codeLength = asciiHexToInt(&buf[6], 2);
           if (codeLength == -1)
@@ -249,7 +518,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           {
             return Timeout;
           }
-          
+
           return SIP; //SIP recognized
           break;
 
@@ -264,48 +533,42 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
           aux = asciiHexToInt(&buf[8], 4);
           if (aux == -1)
           {
-            slaveCom->println("Error check bytes extraction error");
             return Timeout;
           }
 
           //error checking
           if (aux != errorCheck(buf, 8, eca))
           {
-            slaveCom->println(aux);
-            slaveCom->println(eca);
-            slaveCom->println("Error check fail");
             return Timeout;
           }
-          
-          //Reading interrupt code
+
+          //Reading error code
           codeLength = asciiHexToInt(&buf[6], 2);
           if (codeLength == -1)
           {
-            slaveCom->println("Interrupt code extraction error");
             return Timeout;
           }
 
           //Checking the packet end
           if (buf[12] != '\r' ||  buf[13] != '\n')
           {
-            slaveCom->println("End packet chars error");
             return Timeout;
           }
-          
+
           return CEP; //SIP recognized
           break;
 
-          default:
+        default:
           return Timeout;
           break;
       }
     }
   }
   return Timeout;
-  
 }
 
-void AMASPSerialSlave::SetErrorCheck(ErrorCheck errorChk)
+
+void AMASPSerialSlave::SetErrorCheck(ErrorCheck eca)
 {
-  errorCheckAlg = errorChk;
+  errorCheckAlg = eca;
 }

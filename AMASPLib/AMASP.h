@@ -78,7 +78,22 @@ class AMASPSerialMaster
     /// <returns>Return a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
     PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
-    void SetErrorCheck(ErrorCheck errorChk);
+    /// <summary>
+    /// Read the incoming AMASP packet.
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="message">Message read from the associated device.</param>
+    /// <param name="msgLength">Message length in bytes.</param>
+    /// <param name="eca">Error Check Algorithm used by the packet.</param>
+    /// <returns>Returns a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
+    PacketType readPacket(int &deviceID, byte message[], int &codeLength, ErrorCheck &eca);
+
+    /// <summary>
+    /// Sets the eca.
+    /// </summary>
+    /// <param name="eca">Error Check Algorithm. </param>
+    void SetErrorCheck(ErrorCheck eca);
+
 
   private:
     HardwareSerial *masterCom = NULL;
@@ -132,7 +147,21 @@ class AMASPSerialSlave
     /// <returns>Returns a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
     PacketType readPacket(int &deviceID, byte message[], int &codeLength);
 
-    void SetErrorCheck(ErrorCheck errorChk);
+    /// <summary>
+    /// Read the incoming AMASP packet.
+    /// </summary>
+    /// <param name="deviceID">Device identification. </param>
+    /// <param name="message">Message read from the associated device.</param>
+    /// <param name="msgLength">Message length in bytes.</param>
+    /// <param name="eca">Error Check Algorithm used by the packet.</param>
+    /// <returns>Returns a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</returns>
+    PacketType readPacket(int &deviceID, byte message[], int &codeLength, ErrorCheck &eca);
+
+    /// <summary>
+    /// Sets the eca.
+    /// </summary>
+    /// <param name="eca">Error Check Algorithm. </param>
+    void SetErrorCheck(ErrorCheck eca);
 
   private:
     HardwareSerial *slaveCom = NULL;
