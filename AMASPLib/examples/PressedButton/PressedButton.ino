@@ -64,6 +64,9 @@ void setup() {
   Serial.flush();
   // connect the slave to the serial port
   slave.begin(Serial);
+  
+  //No error checking
+  slave.SetErrorCheck(none);
 
   pinMode(buttonPin, INPUT);
   pinMode(ledPin, OUTPUT);

@@ -30,6 +30,10 @@ void setup() {
   Serial.flush();
   // connect the slave to the serial port
   slave.begin(Serial);
+
+  //No error checking
+  slave.SetErrorCheck(none);
+  
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
 }

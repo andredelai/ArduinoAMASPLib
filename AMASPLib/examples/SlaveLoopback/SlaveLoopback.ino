@@ -29,7 +29,10 @@ void setup()
   //Clear the serial 
   Serial.flush();
   //Connect the slave to the serial
-  slave.begin(Serial); 
+  slave.begin(Serial);
+
+  //No error checking
+  slave.SetErrorCheck(none);
 }
 
 void loop() {

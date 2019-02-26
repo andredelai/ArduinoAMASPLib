@@ -30,6 +30,9 @@ void setup()
   Serial.flush();
   //Connect the slave to the serial
   master.begin(Serial);
+
+  //No error checking
+  master.SetErrorCheck(none);
 }
 
 void loop() {

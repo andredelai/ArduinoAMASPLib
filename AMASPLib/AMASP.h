@@ -89,7 +89,7 @@ class AMASPSerialMaster
     PacketType readPacket(int &deviceID, byte message[], int &codeLength, ErrorCheck &eca);
 
     /// <summary>
-    /// Sets the eca.
+    /// Sets the ECA (Error Check Algorithm).
     /// </summary>
     /// <param name="eca">Error Check Algorithm. </param>
     void SetErrorCheck(ErrorCheck eca);
@@ -158,7 +158,7 @@ class AMASPSerialSlave
     PacketType readPacket(int &deviceID, byte message[], int &codeLength, ErrorCheck &eca);
 
     /// <summary>
-    /// Sets the eca.
+    /// Sets the ECA (Error Check Algorithm).
     /// </summary>
     /// <param name="eca">Error Check Algorithm. </param>
     void SetErrorCheck(ErrorCheck eca);
@@ -189,7 +189,7 @@ long asciiHexToInt(char hex[], int length);
 /// <summary>
 /// Error checking function (16 bits)
 /// </summary>
-/// <param name="data">Data array to the calculate the LRC. </param>
+/// <param name="data">Data array to the calculate the error checking. </param>
 /// <param name="dataLength">Data length.</param>
 /// <param name="errorCheckAlg">The choosed error check algorithm.</param>
 /// <returns>Returns the calculated LRC value.</returns>

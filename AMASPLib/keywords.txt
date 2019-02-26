@@ -1,0 +1,39 @@
+#######################################
+# Syntax Coloring Map AMASP
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+AMASPSerialMaster	KEYWORD1	AMASPSerialMaster
+AMASPSerialSlave	KEYWORD1	AMASPSerialSlave
+PacketType KEYWORD1
+MRP KEYWORD1
+SRP KEYWORD1
+SIP KEYWORD1
+CEP KEYWORD1
+Timeout KEYWORD1
+none KEYWORD1
+XOR8 KEYWORD1
+checksum16 KEYWORD1
+LRC16 KEYWORD1
+fletcher16 KEYWORD1
+CRC16 KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+end	KEYWORD2
+sendRequest	KEYWORD2
+sendError	KEYWORD2
+sendInterruption	KEYWORD2
+sendResponse	KEYWORD2
+readPacket	KEYWORD2
+SetErrorCheck KEYWORD2
+
+#######################################
+# Constants (MSGMAXSIZE)
+#######################################
