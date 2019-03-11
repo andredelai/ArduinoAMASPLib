@@ -1,7 +1,7 @@
 /*
-  AMASP.h - AMASP (ASCII MAster Slave Protocol) library for Arduino (version 0.9).
-  Created by Andre Luiz Delai, November 17, 2017.
-  Copyright (c) 2017 Andre L. Delai.  All right reserved.
+  AMASP.h - AMASP (ASCII MAster Slave Protocol) library for Arduino (version 0.9.1).
+  Created by Andre Luiz Delai, Mar 11, 2018.
+  Copyright (c) 2019 Andre L. Delai.  All right reserved.
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -36,6 +36,10 @@
 ///Timeout - No packet found
 /// </summary>
 enum PacketType {MRP = 0, SRP, SIP, CEP, Timeout};
+
+///<sumary>
+///AMASP supported algorithms to error checking.
+///</summary>
 enum ErrorCheck {none = 0, XOR8, checksum16, LRC16, fletcher16, CRC16};
 
 //Serial Master class
@@ -92,7 +96,7 @@ class AMASPSerialMaster
     /// Sets the ECA (Error Check Algorithm).
     /// </summary>
     /// <param name="eca">Error Check Algorithm. </param>
-    void SetErrorCheck(ErrorCheck eca);
+    void setErrorCheck(ErrorCheck eca);
 
 
   private:
@@ -129,15 +133,15 @@ class AMASPSerialSlave
     /// </summary>
     /// <param name="deviceID">Device identification. </param>
     /// <param name="errorCode">The interruption code.</param>
-
     void sendInterruption(int deviceID, int code);
+    
     /// <summary>
     /// Send a CEP (Communication Error Packet).
     /// </summary>
     /// <param name="deviceID">Device identification. </param>
     /// <param name="errorCode">The communication error code.</param>
-
     void sendError(int Device, int code);
+    
     /// <summary>
     /// Read the incoming AMASP packet.
     /// </summary>
@@ -161,7 +165,7 @@ class AMASPSerialSlave
     /// Sets the ECA (Error Check Algorithm).
     /// </summary>
     /// <param name="eca">Error Check Algorithm. </param>
-    void SetErrorCheck(ErrorCheck eca);
+    void setErrorCheck(ErrorCheck eca);
 
   private:
     HardwareSerial *slaveCom = NULL;
@@ -169,7 +173,6 @@ class AMASPSerialSlave
 };
 
 //Auxiliary functions***********
-
 
 /// <summary>
 /// Decimal int to ASCII hex conversion

@@ -1,8 +1,6 @@
 ﻿AMASP Arduino Library
 
-Version 1.0
-
-This library implements the AMASP (ASCII Master/Slave Protocol) for Arduino boards, a simple way to exchange messagens between two computers using serial communication.
+This library implements the AMASP (ASCII Master/Slave Protocol) for Arduino boards, a simple way to exchange messages between two computers using serial communication.
 
 AMASP is free and uses four different packets:
 
@@ -17,18 +15,19 @@ SLAVE -> MASTER:
  SIP - Slave Interruption Packet
  CEP - Communication Error Packet
 
-The protocol is transnparent to the user that only needs to use the AMASP Arduino Library functions to implement his own applications. See the examples codes!
+The protocol is transparent to the user that only needs to use the AMASP Arduino Library functions to implement his own applications. See the examples codes!
 
-The library is always in test and improvements, if you have any problem using it, please send a mail to the author (spanish, portuguese or english) adelai@gmail.com.
+AMASPArduinoLib is under test and improvements, if you have any problem using it, please send a mail to the author (Spanish, Portuguese or English) adelai@gmail.com.
 
 Contributors will be welcome!
 
 Wants to design an AMASP library to other platforms? Be my guest!
 
+Documentation about AMASP available here:  https://doi.org/10.14209/jcis.2019.1
 
 Author:
 
 Andre L. Delai
 adelai@gmail.com
 
-Enjoy :)
+Enjoy, it's free! :)

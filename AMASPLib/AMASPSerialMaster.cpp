@@ -12,7 +12,6 @@ void AMASPSerialMaster::end()
   masterCom = NULL;
 }
 
-
 int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
 {
   char hex[sizeof(int) * 2];
@@ -534,7 +533,7 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
   return Timeout;
 }
 
-void AMASPSerialMaster::SetErrorCheck(ErrorCheck eca)
+void AMASPSerialMaster::setErrorCheck(ErrorCheck eca)
 {
   errorCheckAlg = eca;
 }

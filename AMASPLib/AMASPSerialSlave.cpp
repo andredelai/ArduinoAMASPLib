@@ -568,7 +568,7 @@ PacketType AMASPSerialSlave::readPacket(int &deviceID, byte message[], int &code
 }
 
 
-void AMASPSerialSlave::SetErrorCheck(ErrorCheck eca)
+void AMASPSerialSlave::setErrorCheck(ErrorCheck eca)
 {
   errorCheckAlg = eca;
 }

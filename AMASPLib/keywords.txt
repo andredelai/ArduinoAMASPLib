@@ -32,7 +32,7 @@ sendError	KEYWORD2
 sendInterruption	KEYWORD2
 sendResponse	KEYWORD2
 readPacket	KEYWORD2
-SetErrorCheck KEYWORD2
+setErrorCheck KEYWORD2
 
 #######################################
 # Constants (MSGMAXSIZE)

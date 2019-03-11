@@ -59,7 +59,7 @@ void loop() {
   if (Serial.available() > 0)
   {
     type = slave.readPacket(device, data, codeLength, eca);
-    slave.SetErrorCheck(eca);
+    slave.setErrorCheck(eca);
     switch (type)
     {
       case SRP:        
