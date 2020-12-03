@@ -195,8 +195,8 @@ long asciiHexToInt(char hex[], int length);
 /// <param name="data">Data array to the calculate the error checking. </param>
 /// <param name="dataLength">Data length.</param>
 /// <param name="errorCheckAlg">The choosed error check algorithm.</param>
-/// <returns>Returns the calculated LRC value.</returns>
-short errorCheck(byte *data, int dataLength, int errorCheckAlg);
+/// <returns>Returns the calculated value.</returns>
+uint16_t errorCheck(byte *data, int dataLength, int errorCheckAlg);
 
 
 #endif

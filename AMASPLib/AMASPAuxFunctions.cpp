@@ -34,30 +34,30 @@ long asciiHexToInt(char hex[], int length)
   return num;
 }
 
-short XORCheck(byte* data, int dataLength)
+//XOR8
+uint16_t XORCheck(const uint8_t *data, int dataLength)
 {
-  byte xorCheck = 0;
+  uint8_t xorCheck = 0;
   for (int i = 0; i < dataLength; i++)
   {
     xorCheck ^= data[i];
   }
-  return (short)xorCheck;
+  return (uint16_t)xorCheck;
 }
 
-
-//Classical checksum
-short checksum16Check(byte message[], int dataLength)
+//Checksum16
+uint16_t checksum16Check(const uint8_t *data, int dataLength)
 {
   unsigned short sum = 0;
   while (dataLength-- > 0)
   {
-    sum += *(message++);
+    sum += *(data++);
   }
   return (sum);
-}   /* Sum() */
+}
 
-// LRC 16 bit checksum
-short LRC16Check(byte* data, int dataLength)
+// LRC16
+uint16_t LRC16Check(const uint8_t *data, int dataLength)
 {
   unsigned short lrc = 0;
   for (int i = 0; i < dataLength; i++)
@@ -68,19 +68,19 @@ short LRC16Check(byte* data, int dataLength)
   return lrc;
 }
 
-// CRC16 check
-short CRC16SerialModbus(byte* data, int dataLength)
+// CRC16Modbus
+uint16_t CRC16SerialModbus(const uint8_t *data, int dataLength)
 {
-  unsigned short crc = (short) 0xFFFF;
+  unsigned short crc = (short) 0xFFFF; //initialization
   for (int pos = 0; pos < dataLength; pos++) {
-    crc ^= (unsigned short) data[pos];          // XOR byte into least sig. byte of crc
+    crc ^= (unsigned short) data[pos];
 
-    for (int i = 8; i != 0; i--) // Loop over each bit
+    for (int i = 8; i != 0; i--)
     {
-      if ((crc & 0x0001) != 0) // If the LSB is set
+      if ((crc & 0x0001) != 0)
       {
         crc >>= 1;
-        crc ^= 0xA001; // Polynomial
+        crc ^= 0xA001; // Polynomial Modbus
       }
       else
       {
@@ -88,34 +88,30 @@ short CRC16SerialModbus(byte* data, int dataLength)
       }
     }
   }
-  // Note, this number has low and high bytes swapped, so use it accordingly (or swap bytes)
   return crc;
 }
 
-// Fletcher 16 bit checksum
-short fletcher16Checksum(byte *data, int dataLength)
+//Fletcher16
+uint16_t fletcher16Check(const uint8_t *data, size_t dataLength) 
 {
   uint32_t c0, c1;
-  unsigned int i;
-
-  for (c0 = c1 = 0; dataLength >= 5802; dataLength -= 5802) {
-    for (i = 0; i < 5802; ++i) {
-      c0 = c0 + *data++;
-      c1 = c1 + c0;
+  for (c0 = c1 = 0; dataLength > 0; ) {
+    size_t blocksize = dataLength;
+    if (blocksize > 0x138A) {
+      blocksize = 0x138A;
     }
-    c0 = c0 % 255;
-    c1 = c1 % 255;
-  }
-  for (i = 0; i < dataLength; ++i) {
-    c0 = c0 + *data++;
-    c1 = c1 + c0;
-  }
-  c0 = c0 % 255;
-  c1 = c1 % 255;
-  return (c1 << 8 | c0);
+    dataLength -= blocksize;
+    do {
+      c0 += *data++;
+      c1 += c0;
+    } while (--blocksize);
+    c0 %= 0xFF;
+    c1 %= 0xFF;
+   }
+   return (c1 << 8 | c0);
 }
 
-short errorCheck(byte *data, int dataLength, int errorCheckAlg)
+uint16_t errorCheck(byte *data, int dataLength, int errorCheckAlg)
 {
   switch (errorCheckAlg)
   {
@@ -132,7 +128,7 @@ short errorCheck(byte *data, int dataLength, int errorCheckAlg)
       break;
 
     case 4:
-      return fletcher16Checksum(data, dataLength);
+      return fletcher16Check(data, dataLength);
       break;
 
     case 5:
