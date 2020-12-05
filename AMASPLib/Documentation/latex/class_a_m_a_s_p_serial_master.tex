@@ -1,0 +1,150 @@
+\hypertarget{class_a_m_a_s_p_serial_master}{}\doxysection{A\+M\+A\+S\+P\+Serial\+Master Class Reference}
+\label{class_a_m_a_s_p_serial_master}\index{AMASPSerialMaster@{AMASPSerialMaster}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_master_a3d4ed743d4a5fe298f748c1145c3c504}{begin}} (Hardware\+Serial \&serial)
+\begin{DoxyCompactList}\small\item\em Initializes the master connecting it to the serial port. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_master_ab27e05338bb6f8dafd8e4fa36f634fcf}{end}} ()
+\begin{DoxyCompactList}\small\item\em Finalizes the master disconnect it from the serial port. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_a_m_a_s_p_serial_master_a3f11ae85b34d1fb1c8f387bd62f79149}{send\+Request}} (int device\+ID, byte message\mbox{[}$\,$\mbox{]}, int msg\+Length)
+\begin{DoxyCompactList}\small\item\em Send a M\+RP (Master Request Packet). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_master_ab4c3a6f44617ae9eb74db6979e43394d}{send\+Error}} (int device, int error\+Code)
+\begin{DoxyCompactList}\small\item\em Send a C\+EP (Communication Error Packet). \end{DoxyCompactList}\item 
+Packet\+Type \mbox{\hyperlink{class_a_m_a_s_p_serial_master_aaf856fdd728744cb6fd75f8cd31628af}{read\+Packet}} (int \&device\+ID, byte message\mbox{[}$\,$\mbox{]}, int \&code\+Length)
+\begin{DoxyCompactList}\small\item\em Read the incoming A\+M\+A\+SP packet. \end{DoxyCompactList}\item 
+Packet\+Type \mbox{\hyperlink{class_a_m_a_s_p_serial_master_afb4ab90aa1f37386bc8647bd39f61a7e}{read\+Packet}} (int \&device\+ID, byte message\mbox{[}$\,$\mbox{]}, int \&code\+Length, Error\+Check \&eca)
+\begin{DoxyCompactList}\small\item\em Read the incoming A\+M\+A\+SP packet. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_master_aed49ffd4ff28bc7bdb285c9f47e3e51c}{set\+Error\+Check}} (Error\+Check eca)
+\begin{DoxyCompactList}\small\item\em Sets the E\+CA (Error Check Algorithm). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_master_a3d4ed743d4a5fe298f748c1145c3c504}\label{class_a_m_a_s_p_serial_master_a3d4ed743d4a5fe298f748c1145c3c504}} 
+\index{AMASPSerialMaster@{AMASPSerialMaster}!begin@{begin}}
+\index{begin@{begin}!AMASPSerialMaster@{AMASPSerialMaster}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Master\+::begin (\begin{DoxyParamCaption}\item[{Hardware\+Serial \&}]{serial }\end{DoxyParamCaption})}
+
+
+
+Initializes the master connecting it to the serial port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em serial} & Serial communication object. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_master_ab27e05338bb6f8dafd8e4fa36f634fcf}\label{class_a_m_a_s_p_serial_master_ab27e05338bb6f8dafd8e4fa36f634fcf}} 
+\index{AMASPSerialMaster@{AMASPSerialMaster}!end@{end}}
+\index{end@{end}!AMASPSerialMaster@{AMASPSerialMaster}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Master\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Finalizes the master disconnect it from the serial port. 
+
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_master_aaf856fdd728744cb6fd75f8cd31628af}\label{class_a_m_a_s_p_serial_master_aaf856fdd728744cb6fd75f8cd31628af}} 
+\index{AMASPSerialMaster@{AMASPSerialMaster}!readPacket@{readPacket}}
+\index{readPacket@{readPacket}!AMASPSerialMaster@{AMASPSerialMaster}}
+\doxysubsubsection{\texorpdfstring{readPacket()}{readPacket()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Packet\+Type A\+M\+A\+S\+P\+Serial\+Master\+::read\+Packet (\begin{DoxyParamCaption}\item[{int \&}]{device\+ID,  }\item[{byte}]{message\mbox{[}$\,$\mbox{]},  }\item[{int \&}]{code\+Length }\end{DoxyParamCaption})}
+
+
+
+Read the incoming A\+M\+A\+SP packet. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em message} & Message read from the associated device.\\
+\hline
+{\em msg\+Length} & Message length in bytes.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Return a Packet\+Type enumeration (M\+RP, S\+RP, S\+IP, C\+EP or timeout). If timeout is returned, no A\+M\+A\+SP packet was found.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_master_afb4ab90aa1f37386bc8647bd39f61a7e}\label{class_a_m_a_s_p_serial_master_afb4ab90aa1f37386bc8647bd39f61a7e}} 
+\index{AMASPSerialMaster@{AMASPSerialMaster}!readPacket@{readPacket}}
+\index{readPacket@{readPacket}!AMASPSerialMaster@{AMASPSerialMaster}}
+\doxysubsubsection{\texorpdfstring{readPacket()}{readPacket()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Packet\+Type A\+M\+A\+S\+P\+Serial\+Master\+::read\+Packet (\begin{DoxyParamCaption}\item[{int \&}]{device\+ID,  }\item[{byte}]{message\mbox{[}$\,$\mbox{]},  }\item[{int \&}]{code\+Length,  }\item[{Error\+Check \&}]{eca }\end{DoxyParamCaption})}
+
+
+
+Read the incoming A\+M\+A\+SP packet. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em message} & Message read from the associated device.\\
+\hline
+{\em msg\+Length} & Message length in bytes.\\
+\hline
+{\em eca} & Error Check Algorithm used by the packet.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns a Packet\+Type enumeration (M\+RP, S\+RP, S\+IP, C\+EP or timeout). If timeout is returned, no A\+M\+A\+SP packet was found.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_master_ab4c3a6f44617ae9eb74db6979e43394d}\label{class_a_m_a_s_p_serial_master_ab4c3a6f44617ae9eb74db6979e43394d}} 
+\index{AMASPSerialMaster@{AMASPSerialMaster}!sendError@{sendError}}
+\index{sendError@{sendError}!AMASPSerialMaster@{AMASPSerialMaster}}
+\doxysubsubsection{\texorpdfstring{sendError()}{sendError()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Master\+::send\+Error (\begin{DoxyParamCaption}\item[{int}]{device,  }\item[{int}]{error\+Code }\end{DoxyParamCaption})}
+
+
+
+Send a C\+EP (Communication Error Packet). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em error\+Code} & The communication error code.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_master_a3f11ae85b34d1fb1c8f387bd62f79149}\label{class_a_m_a_s_p_serial_master_a3f11ae85b34d1fb1c8f387bd62f79149}} 
+\index{AMASPSerialMaster@{AMASPSerialMaster}!sendRequest@{sendRequest}}
+\index{sendRequest@{sendRequest}!AMASPSerialMaster@{AMASPSerialMaster}}
+\doxysubsubsection{\texorpdfstring{sendRequest()}{sendRequest()}}
+{\footnotesize\ttfamily int A\+M\+A\+S\+P\+Serial\+Master\+::send\+Request (\begin{DoxyParamCaption}\item[{int}]{device\+ID,  }\item[{byte}]{message\mbox{[}$\,$\mbox{]},  }\item[{int}]{msg\+Length }\end{DoxyParamCaption})}
+
+
+
+Send a M\+RP (Master Request Packet). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em message} & Message to be send to the associated device.\\
+\hline
+{\em msg\+Length} & Message length in bytes.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_master_aed49ffd4ff28bc7bdb285c9f47e3e51c}\label{class_a_m_a_s_p_serial_master_aed49ffd4ff28bc7bdb285c9f47e3e51c}} 
+\index{AMASPSerialMaster@{AMASPSerialMaster}!setErrorCheck@{setErrorCheck}}
+\index{setErrorCheck@{setErrorCheck}!AMASPSerialMaster@{AMASPSerialMaster}}
+\doxysubsubsection{\texorpdfstring{setErrorCheck()}{setErrorCheck()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Master\+::set\+Error\+Check (\begin{DoxyParamCaption}\item[{Error\+Check}]{eca }\end{DoxyParamCaption})}
+
+
+
+Sets the E\+CA (Error Check Algorithm). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em eca} & Error Check Algorithm. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/delai/\+Documents/\+Repositorio/arduinoamasplib/\+A\+M\+A\+S\+P\+Lib/A\+M\+A\+S\+P.\+h\item 
+C\+:/\+Users/delai/\+Documents/\+Repositorio/arduinoamasplib/\+A\+M\+A\+S\+P\+Lib/A\+M\+A\+S\+P\+Serial\+Master.\+cpp\end{DoxyCompactItemize}

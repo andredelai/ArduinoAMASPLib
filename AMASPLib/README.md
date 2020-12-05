@@ -15,13 +15,13 @@ SLAVE -> MASTER:
  SIP - Slave Interruption Packet
  CEP - Communication Error Packet
 
-The protocol is transparent to the user that only needs to use the AMASP Arduino Library functions to implement his own applications. See the examples codes!
+The protocol is transparent to the user that only needs to use the AMASP Arduino Library functions to implement his own applications. Please, take a look at the example codes.
 
 AMASPArduinoLib is under test and improvements, if you have any problem using it, please send a mail to the author (Spanish, Portuguese or English) adelai@gmail.com.
 
 Contributors will be welcome!
 
-Wants to design an AMASP library to other platforms? Be my guest!
+Do you want to design an AMASP library to other platforms? Be my guest!
 
 Documentation about AMASP available here:  https://doi.org/10.14209/jcis.2019.1
 

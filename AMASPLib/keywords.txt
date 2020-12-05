@@ -6,9 +6,10 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-AMASPSerialMaster	KEYWORD1	AMASPSerialMaster
-AMASPSerialSlave	KEYWORD1	AMASPSerialSlave
+AMASPSerialMaster	KEYWORD1	
+AMASPSerialSlave	KEYWORD1	
 PacketType KEYWORD1
+ErrorCheck KEYWORD1
 MRP KEYWORD1
 SRP KEYWORD1
 SIP KEYWORD1

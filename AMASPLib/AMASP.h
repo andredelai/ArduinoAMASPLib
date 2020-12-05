@@ -47,13 +47,13 @@ class AMASPSerialMaster
 {
   public:
     /// <summary>
-    /// Initializes the master connecting it to the serial link.
+    /// Initializes the master connecting it to the serial port.
     /// </summary>
     /// <param name="serial">Serial communication object. </param>
     void begin(HardwareSerial &serial);
 
     /// <summary>
-    /// Finalizes the master disconnect it from the serial link.
+    /// Finalizes the master disconnect it from the serial port.
     /// </summary>
     void end();
 
@@ -109,13 +109,13 @@ class AMASPSerialSlave
 {
   public:
     /// <summary>
-    /// Initializes the slave connecting it to the serial link.
+    /// Initializes the slave connecting it to the serial port.
     /// </summary>
     /// <param name="serial">Serial communication object. </param>
     void begin(HardwareSerial &serial);
 
     /// <summary>
-    /// Finalizes the slave disconnect it from the serial link.
+    /// Finalizes the slave disconnect it from the serial port.
     /// </summary>
     void end();
 

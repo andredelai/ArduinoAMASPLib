@@ -1,0 +1,169 @@
+\hypertarget{class_a_m_a_s_p_serial_slave}{}\doxysection{A\+M\+A\+S\+P\+Serial\+Slave Class Reference}
+\label{class_a_m_a_s_p_serial_slave}\index{AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_slave_adcdd39801b5a5ee4c6f199f3b3b4b74e}{begin}} (Hardware\+Serial \&serial)
+\begin{DoxyCompactList}\small\item\em Initializes the slave connecting it to the serial port. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_slave_abff0bb9620961db080091bdbc2893189}{end}} ()
+\begin{DoxyCompactList}\small\item\em Finalizes the slave disconnect it from the serial port. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_slave_a9791abfd22ac25f4e3a019c2496570c7}{send\+Response}} (int device\+ID, byte message\mbox{[}$\,$\mbox{]}, int msg\+Length)
+\begin{DoxyCompactList}\small\item\em Send a S\+RP (Slave Response Packet). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_slave_a29259462524a542c14f4fc336d4ffd04}{send\+Interruption}} (int device\+ID, int code)
+\begin{DoxyCompactList}\small\item\em Send a S\+IP (Slave Interruption Packet). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_slave_a9a78ed3d6747ff1206174b20b399ff75}{send\+Error}} (int Device, int code)
+\begin{DoxyCompactList}\small\item\em Send a C\+EP (Communication Error Packet). \end{DoxyCompactList}\item 
+Packet\+Type \mbox{\hyperlink{class_a_m_a_s_p_serial_slave_a838917ab4d9ddf56ea93ea3a3a4298cc}{read\+Packet}} (int \&device\+ID, byte message\mbox{[}$\,$\mbox{]}, int \&code\+Length)
+\begin{DoxyCompactList}\small\item\em Read the incoming A\+M\+A\+SP packet. \end{DoxyCompactList}\item 
+Packet\+Type \mbox{\hyperlink{class_a_m_a_s_p_serial_slave_ac15ee39603e78bd9f9c2f419128ae5a9}{read\+Packet}} (int \&device\+ID, byte message\mbox{[}$\,$\mbox{]}, int \&code\+Length, Error\+Check \&eca)
+\begin{DoxyCompactList}\small\item\em Read the incoming A\+M\+A\+SP packet. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_a_m_a_s_p_serial_slave_a84328b43ce9869d855259d0512d7beaf}{set\+Error\+Check}} (Error\+Check eca)
+\begin{DoxyCompactList}\small\item\em Sets the E\+CA (Error Check Algorithm). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_slave_adcdd39801b5a5ee4c6f199f3b3b4b74e}\label{class_a_m_a_s_p_serial_slave_adcdd39801b5a5ee4c6f199f3b3b4b74e}} 
+\index{AMASPSerialSlave@{AMASPSerialSlave}!begin@{begin}}
+\index{begin@{begin}!AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsubsection{\texorpdfstring{begin()}{begin()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Slave\+::begin (\begin{DoxyParamCaption}\item[{Hardware\+Serial \&}]{serial }\end{DoxyParamCaption})}
+
+
+
+Initializes the slave connecting it to the serial port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em serial} & Serial communication object. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_slave_abff0bb9620961db080091bdbc2893189}\label{class_a_m_a_s_p_serial_slave_abff0bb9620961db080091bdbc2893189}} 
+\index{AMASPSerialSlave@{AMASPSerialSlave}!end@{end}}
+\index{end@{end}!AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsubsection{\texorpdfstring{end()}{end()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Slave\+::end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Finalizes the slave disconnect it from the serial port. 
+
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_slave_a838917ab4d9ddf56ea93ea3a3a4298cc}\label{class_a_m_a_s_p_serial_slave_a838917ab4d9ddf56ea93ea3a3a4298cc}} 
+\index{AMASPSerialSlave@{AMASPSerialSlave}!readPacket@{readPacket}}
+\index{readPacket@{readPacket}!AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsubsection{\texorpdfstring{readPacket()}{readPacket()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Packet\+Type A\+M\+A\+S\+P\+Serial\+Slave\+::read\+Packet (\begin{DoxyParamCaption}\item[{int \&}]{device\+ID,  }\item[{byte}]{message\mbox{[}$\,$\mbox{]},  }\item[{int \&}]{code\+Length }\end{DoxyParamCaption})}
+
+
+
+Read the incoming A\+M\+A\+SP packet. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em message} & Message read from the associated device.\\
+\hline
+{\em msg\+Length} & Message length in bytes.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns a Packet\+Type enumeration (M\+RP, S\+RP, S\+IP, C\+EP or timeout). If timeout is returned, no A\+M\+A\+SP packet was found.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_slave_ac15ee39603e78bd9f9c2f419128ae5a9}\label{class_a_m_a_s_p_serial_slave_ac15ee39603e78bd9f9c2f419128ae5a9}} 
+\index{AMASPSerialSlave@{AMASPSerialSlave}!readPacket@{readPacket}}
+\index{readPacket@{readPacket}!AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsubsection{\texorpdfstring{readPacket()}{readPacket()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Packet\+Type A\+M\+A\+S\+P\+Serial\+Slave\+::read\+Packet (\begin{DoxyParamCaption}\item[{int \&}]{device\+ID,  }\item[{byte}]{message\mbox{[}$\,$\mbox{]},  }\item[{int \&}]{code\+Length,  }\item[{Error\+Check \&}]{eca }\end{DoxyParamCaption})}
+
+
+
+Read the incoming A\+M\+A\+SP packet. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em message} & Message read from the associated device.\\
+\hline
+{\em msg\+Length} & Message length in bytes.\\
+\hline
+{\em eca} & Error Check Algorithm used by the packet.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns a Packet\+Type enumeration (M\+RP, S\+RP, S\+IP, C\+EP or timeout). If timeout is returned, no A\+M\+A\+SP packet was found.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_slave_a9a78ed3d6747ff1206174b20b399ff75}\label{class_a_m_a_s_p_serial_slave_a9a78ed3d6747ff1206174b20b399ff75}} 
+\index{AMASPSerialSlave@{AMASPSerialSlave}!sendError@{sendError}}
+\index{sendError@{sendError}!AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsubsection{\texorpdfstring{sendError()}{sendError()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Slave\+::send\+Error (\begin{DoxyParamCaption}\item[{int}]{Device,  }\item[{int}]{code }\end{DoxyParamCaption})}
+
+
+
+Send a C\+EP (Communication Error Packet). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em error\+Code} & The communication error code.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_slave_a29259462524a542c14f4fc336d4ffd04}\label{class_a_m_a_s_p_serial_slave_a29259462524a542c14f4fc336d4ffd04}} 
+\index{AMASPSerialSlave@{AMASPSerialSlave}!sendInterruption@{sendInterruption}}
+\index{sendInterruption@{sendInterruption}!AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsubsection{\texorpdfstring{sendInterruption()}{sendInterruption()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Slave\+::send\+Interruption (\begin{DoxyParamCaption}\item[{int}]{device\+ID,  }\item[{int}]{code }\end{DoxyParamCaption})}
+
+
+
+Send a S\+IP (Slave Interruption Packet). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em error\+Code} & The interruption code.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_slave_a9791abfd22ac25f4e3a019c2496570c7}\label{class_a_m_a_s_p_serial_slave_a9791abfd22ac25f4e3a019c2496570c7}} 
+\index{AMASPSerialSlave@{AMASPSerialSlave}!sendResponse@{sendResponse}}
+\index{sendResponse@{sendResponse}!AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsubsection{\texorpdfstring{sendResponse()}{sendResponse()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Slave\+::send\+Response (\begin{DoxyParamCaption}\item[{int}]{device\+ID,  }\item[{byte}]{message\mbox{[}$\,$\mbox{]},  }\item[{int}]{msg\+Length }\end{DoxyParamCaption})}
+
+
+
+Send a S\+RP (Slave Response Packet). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+ID} & Device identification. \\
+\hline
+{\em message} & Message to be send from the associated device.\\
+\hline
+{\em msg\+Length} & Message length in bytes.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_a_m_a_s_p_serial_slave_a84328b43ce9869d855259d0512d7beaf}\label{class_a_m_a_s_p_serial_slave_a84328b43ce9869d855259d0512d7beaf}} 
+\index{AMASPSerialSlave@{AMASPSerialSlave}!setErrorCheck@{setErrorCheck}}
+\index{setErrorCheck@{setErrorCheck}!AMASPSerialSlave@{AMASPSerialSlave}}
+\doxysubsubsection{\texorpdfstring{setErrorCheck()}{setErrorCheck()}}
+{\footnotesize\ttfamily void A\+M\+A\+S\+P\+Serial\+Slave\+::set\+Error\+Check (\begin{DoxyParamCaption}\item[{Error\+Check}]{eca }\end{DoxyParamCaption})}
+
+
+
+Sets the E\+CA (Error Check Algorithm). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em eca} & Error Check Algorithm. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/delai/\+Documents/\+Repositorio/arduinoamasplib/\+A\+M\+A\+S\+P\+Lib/A\+M\+A\+S\+P.\+h\item 
+C\+:/\+Users/delai/\+Documents/\+Repositorio/arduinoamasplib/\+A\+M\+A\+S\+P\+Lib/A\+M\+A\+S\+P\+Serial\+Slave.\+cpp\end{DoxyCompactItemize}

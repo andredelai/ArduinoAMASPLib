@@ -23,7 +23,7 @@ The library is always in test and improvements, if you have any problem using it
 
 Contributors will be welcome!
 
-Wants to develop an AMASP library to other platforms? Be my guest!
+Do you want to develop an AMASP library to other platforms? Be my guest!
 
 Author:
 Andre L. Delai
