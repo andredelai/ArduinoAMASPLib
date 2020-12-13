@@ -11,15 +11,15 @@
 \contentsline {subsubsection}{\numberline {3.1.1.4}readPacket()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{6}{subsubsection.3.1.1.4}%
 \contentsline {subsubsection}{\numberline {3.1.1.5}sendError()}{7}{subsubsection.3.1.1.5}%
 \contentsline {subsubsection}{\numberline {3.1.1.6}sendRequest()}{7}{subsubsection.3.1.1.6}%
-\contentsline {subsubsection}{\numberline {3.1.1.7}setErrorCheck()}{7}{subsubsection.3.1.1.7}%
+\contentsline {subsubsection}{\numberline {3.1.1.7}setErrorCheck()}{8}{subsubsection.3.1.1.7}%
 \contentsline {section}{\numberline {3.2}A\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}M\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}A\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}S\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}P\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Serial\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Slave Class Reference}{8}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}Member Function Documentation}{8}{subsection.3.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.1.1}begin()}{8}{subsubsection.3.2.1.1}%
-\contentsline {subsubsection}{\numberline {3.2.1.2}end()}{8}{subsubsection.3.2.1.2}%
+\contentsline {subsubsection}{\numberline {3.2.1.2}end()}{9}{subsubsection.3.2.1.2}%
 \contentsline {subsubsection}{\numberline {3.2.1.3}readPacket()\hspace {0.1cm}{\footnotesize \ttfamily [1/2]}}{9}{subsubsection.3.2.1.3}%
 \contentsline {subsubsection}{\numberline {3.2.1.4}readPacket()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{9}{subsubsection.3.2.1.4}%
 \contentsline {subsubsection}{\numberline {3.2.1.5}sendError()}{10}{subsubsection.3.2.1.5}%
 \contentsline {subsubsection}{\numberline {3.2.1.6}sendInterruption()}{10}{subsubsection.3.2.1.6}%
-\contentsline {subsubsection}{\numberline {3.2.1.7}sendResponse()}{10}{subsubsection.3.2.1.7}%
+\contentsline {subsubsection}{\numberline {3.2.1.7}sendResponse()}{11}{subsubsection.3.2.1.7}%
 \contentsline {subsubsection}{\numberline {3.2.1.8}setErrorCheck()}{11}{subsubsection.3.2.1.8}%
 \contentsline {chapter}{Index}{13}{section*.4}%

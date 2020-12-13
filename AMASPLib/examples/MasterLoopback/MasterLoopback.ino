@@ -32,7 +32,7 @@ void setup()
   master.begin(Serial);
 
   //No error checking
-  master.SetErrorCheck(none);
+  master.setErrorCheck(none);
 }
 
 void loop() {

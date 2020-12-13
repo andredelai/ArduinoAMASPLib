@@ -15,7 +15,8 @@ void AMASPSerialMaster::end()
 int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
 {
   char hex[sizeof(int) * 2];
-
+  int i;
+  
   //Mounting the packet
   byte pkt[MSGMAXSIZE + 15];
 
@@ -36,14 +37,13 @@ int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
   pkt[7] = hex[1];
   pkt[8] = hex[0];
   //Message (payload)
-  for (int i = 0; i < msgLength ; i++)
+  for (i = 0; i < msgLength ; i++)
   {
     pkt[9 + i] = message[i];
   }
   //Error checking algorithm
-  //masterCom->write(pkt, msgLength + 9);
-  intToASCIIHex(errorCheck(pkt, msgLength + 9, errorCheckAlg), hex);
-  //intToASCIIHex(CRC16SerialModbus(pkt, msgLength + 8), hex);
+  i = errorCheck(pkt, msgLength + 9, errorCheckAlg);
+  intToASCIIHex(i,hex);
   pkt[9 + msgLength] = hex[3];
   pkt[9 + msgLength + 1] = hex[2];
   pkt[9 + msgLength + 2] = hex[1];
@@ -52,15 +52,17 @@ int AMASPSerialMaster::sendRequest(int deviceID, byte message[], int msgLength)
   pkt[9 + msgLength + 4] = '\r';
   pkt[9 + msgLength + 5] = '\n';
 
-  //sending Request
+  //Sending the MRP
   masterCom->write(pkt, 15 + msgLength);
+  return i; //Error check data.
 
 }
 
-void AMASPSerialMaster::sendError(int deviceID, int errorCode)
+int AMASPSerialMaster::sendError(int deviceID, int errorCode)
 {
   char hex[sizeof(int) * 2];
   byte pkt[14];
+  int ecd;
 
   //Packet Type
   pkt[0] = '!';
@@ -78,7 +80,8 @@ void AMASPSerialMaster::sendError(int deviceID, int errorCode)
   pkt[6] = hex[1];
   pkt[7] = hex[0];
   //Error checking algorithm
-  intToASCIIHex(errorCheck(pkt, 8, errorCheckAlg), hex);
+  ecd = errorCheck(pkt, 8, errorCheckAlg);
+  intToASCIIHex(ecd,hex);
   pkt[8] = hex[3];
   pkt[9] = hex[2];
   pkt[10] = hex[1];
@@ -87,7 +90,9 @@ void AMASPSerialMaster::sendError(int deviceID, int errorCode)
   pkt[12] = '\r';
   pkt[13] = '\n';
 
+  //Sending the CEP
   masterCom->write(pkt, 14);
+  return ecd; //Error check data.
 }
 
 PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &codeLength)
@@ -312,11 +317,10 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
   return Timeout;
 }
 
-PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &codeLength, ErrorCheck &eca)
+PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &codeLength, ErrorCheck &eca, int &ecd)
 {
   byte buf[MSGMAXSIZE + 15];
   PacketType type;
-  int aux;
 
   //Searching for a packet in serial buffer (starts with !).
   while (masterCom->readBytes(buf, 1) != 0)
@@ -375,14 +379,14 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
           }
 
           //Extracting error checking bytes
-          aux = asciiHexToInt(&buf[(codeLength) + 9], 4);
-          if (aux == -1)
+          ecd = asciiHexToInt(&buf[(codeLength) + 9], 4);
+          if (ecd == -1)
           {
             return Timeout;
           }
 
           // Error checking
-          if (aux != errorCheck(buf, codeLength + 9, eca))
+          if (ecd != errorCheck(buf, codeLength + 9, eca))
           {
             return Timeout;
           }
@@ -426,18 +430,18 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
           }
 
           //Extracting error checking bytes
-          aux = asciiHexToInt(&buf[(codeLength) + 9], 4);
-          if (aux == -1)
+          ecd = asciiHexToInt(&buf[(codeLength) + 9], 4);
+          if (ecd == -1)
           {
             return Timeout;
           }
 
           // Error checking
-          if (aux != errorCheck(buf, codeLength + 9, eca))
+          if (ecd != errorCheck(buf, codeLength + 9, eca))
           {
             return Timeout;
           }
-
+          
           //Checking the packet end
           if (buf[codeLength + 13] != '\r' ||  buf[codeLength + 14] != '\n')
           {
@@ -460,18 +464,18 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
           }
 
           //Extracting error checking bytes
-          aux = asciiHexToInt(&buf[8], 4);
-          if (aux == -1)
+          ecd = asciiHexToInt(&buf[8], 4);
+          if (ecd == -1)
           {
             return Timeout;
           }
 
           //error checking
-          if (aux == errorCheck(buf, 8, eca))
+          if (ecd == errorCheck(buf, 8, eca))
           {
             return Timeout;
           }
-          
+                   
           //Reading interrupt code
           codeLength = asciiHexToInt(&buf[6], 2);
           if (codeLength == -1)
@@ -496,14 +500,14 @@ PacketType AMASPSerialMaster::readPacket(int &deviceID, byte message[], int &cod
           }
 
           //Extracting error checking bytes
-          aux = asciiHexToInt(&buf[8], 4);
-          if (aux == -1)
+          ecd = asciiHexToInt(&buf[8], 4);
+          if (ecd == -1)
           {
             return Timeout;
           }
 
           //error checking
-          if (aux != errorCheck(buf, 8, eca))
+          if (ecd != errorCheck(buf, 8, eca))
           {
             return Timeout;
           }

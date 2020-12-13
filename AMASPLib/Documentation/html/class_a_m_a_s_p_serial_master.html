@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.20"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AMASP Arduino Serial Library: AMASPSerialMaster Class Reference</title>
+<title>AMASP Arduino Library: AMASPSerialMaster Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,8 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="AMASPDiagramSmall.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">AMASP Arduino Serial Library
-   &#160;<span id="projectnumber">1.0.0</span>
+   <div id="projectname">AMASP Arduino Library
    </div>
-   <div id="projectbrief">Reference Guide</div>
   </td>
  </tr>
  </tbody>
@@ -83,15 +81,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f11ae85b34d1fb1c8f387bd62f79149"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_m_a_s_p_serial_master.html#a3f11ae85b34d1fb1c8f387bd62f79149">sendRequest</a> (int deviceID, byte message[], int msgLength)</td></tr>
 <tr class="memdesc:a3f11ae85b34d1fb1c8f387bd62f79149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a MRP (Master Request Packet).  <a href="class_a_m_a_s_p_serial_master.html#a3f11ae85b34d1fb1c8f387bd62f79149">More...</a><br /></td></tr>
 <tr class="separator:a3f11ae85b34d1fb1c8f387bd62f79149"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4c3a6f44617ae9eb74db6979e43394d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_m_a_s_p_serial_master.html#ab4c3a6f44617ae9eb74db6979e43394d">sendError</a> (int device, int errorCode)</td></tr>
-<tr class="memdesc:ab4c3a6f44617ae9eb74db6979e43394d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a CEP (Communication Error Packet).  <a href="class_a_m_a_s_p_serial_master.html#ab4c3a6f44617ae9eb74db6979e43394d">More...</a><br /></td></tr>
-<tr class="separator:ab4c3a6f44617ae9eb74db6979e43394d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae44a45a5f93cfa020135a9b3d16a436b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_m_a_s_p_serial_master.html#ae44a45a5f93cfa020135a9b3d16a436b">sendError</a> (int device, int errorCode)</td></tr>
+<tr class="memdesc:ae44a45a5f93cfa020135a9b3d16a436b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a CEP (Communication Error Packet).  <a href="class_a_m_a_s_p_serial_master.html#ae44a45a5f93cfa020135a9b3d16a436b">More...</a><br /></td></tr>
+<tr class="separator:ae44a45a5f93cfa020135a9b3d16a436b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf856fdd728744cb6fd75f8cd31628af"><td class="memItemLeft" align="right" valign="top">PacketType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_m_a_s_p_serial_master.html#aaf856fdd728744cb6fd75f8cd31628af">readPacket</a> (int &amp;deviceID, byte message[], int &amp;codeLength)</td></tr>
 <tr class="memdesc:aaf856fdd728744cb6fd75f8cd31628af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the incoming AMASP packet.  <a href="class_a_m_a_s_p_serial_master.html#aaf856fdd728744cb6fd75f8cd31628af">More...</a><br /></td></tr>
 <tr class="separator:aaf856fdd728744cb6fd75f8cd31628af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb4ab90aa1f37386bc8647bd39f61a7e"><td class="memItemLeft" align="right" valign="top">PacketType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_m_a_s_p_serial_master.html#afb4ab90aa1f37386bc8647bd39f61a7e">readPacket</a> (int &amp;deviceID, byte message[], int &amp;codeLength, ErrorCheck &amp;eca)</td></tr>
-<tr class="memdesc:afb4ab90aa1f37386bc8647bd39f61a7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the incoming AMASP packet.  <a href="class_a_m_a_s_p_serial_master.html#afb4ab90aa1f37386bc8647bd39f61a7e">More...</a><br /></td></tr>
-<tr class="separator:afb4ab90aa1f37386bc8647bd39f61a7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3f8b775840fc27dd7c6a6c12348cde2"><td class="memItemLeft" align="right" valign="top">PacketType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_m_a_s_p_serial_master.html#ab3f8b775840fc27dd7c6a6c12348cde2">readPacket</a> (int &amp;deviceID, byte message[], int &amp;codeLength, ErrorCheck &amp;eca, int &amp;ecd)</td></tr>
+<tr class="memdesc:ab3f8b775840fc27dd7c6a6c12348cde2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the incoming AMASP packet.  <a href="class_a_m_a_s_p_serial_master.html#ab3f8b775840fc27dd7c6a6c12348cde2">More...</a><br /></td></tr>
+<tr class="separator:ab3f8b775840fc27dd7c6a6c12348cde2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed49ffd4ff28bc7bdb285c9f47e3e51c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_m_a_s_p_serial_master.html#aed49ffd4ff28bc7bdb285c9f47e3e51c">setErrorCheck</a> (ErrorCheck eca)</td></tr>
 <tr class="memdesc:aed49ffd4ff28bc7bdb285c9f47e3e51c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the ECA (Error Check Algorithm).  <a href="class_a_m_a_s_p_serial_master.html#aed49ffd4ff28bc7bdb285c9f47e3e51c">More...</a><br /></td></tr>
 <tr class="separator:aed49ffd4ff28bc7bdb285c9f47e3e51c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,7 +114,7 @@ Public Member Functions</h2></td></tr>
 <p>Initializes the master connecting it to the serial port. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">serial</td><td>Serial communication object. </td></tr>
+    <tr><td class="paramname">serial</td><td>Serial communication object (input). </td></tr>
   </table>
   </dd>
 </dl>
@@ -177,18 +175,18 @@ Public Member Functions</h2></td></tr>
 <p>Read the incoming AMASP packet. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">deviceID</td><td>Device identification. </td></tr>
-    <tr><td class="paramname">message</td><td>Message read from the associated device.</td></tr>
-    <tr><td class="paramname">msgLength</td><td>Message length in bytes.</td></tr>
+    <tr><td class="paramname">deviceID</td><td>The device identification (output). </td></tr>
+    <tr><td class="paramname">message</td><td>The message read from the associated device (output).</td></tr>
+    <tr><td class="paramname">msgLength</td><td>The Message length in bytes (output).</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Return a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no valid AMASP packet was found.</dd></dl>
 
 </div>
 </div>
-<a id="afb4ab90aa1f37386bc8647bd39f61a7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb4ab90aa1f37386bc8647bd39f61a7e">&#9670;&nbsp;</a></span>readPacket() <span class="overload">[2/2]</span></h2>
+<a id="ab3f8b775840fc27dd7c6a6c12348cde2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3f8b775840fc27dd7c6a6c12348cde2">&#9670;&nbsp;</a></span>readPacket() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -215,7 +213,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">ErrorCheck &amp;&#160;</td>
-          <td class="paramname"><em>eca</em>&#160;</td>
+          <td class="paramname"><em>eca</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>ecd</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -228,25 +232,26 @@ Public Member Functions</h2></td></tr>
 <p>Read the incoming AMASP packet. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">deviceID</td><td>Device identification. </td></tr>
-    <tr><td class="paramname">message</td><td>Message read from the associated device.</td></tr>
-    <tr><td class="paramname">msgLength</td><td>Message length in bytes.</td></tr>
-    <tr><td class="paramname">eca</td><td>Error Check Algorithm used by the packet.</td></tr>
+    <tr><td class="paramname">deviceID</td><td>The device identification (output). </td></tr>
+    <tr><td class="paramname">message</td><td>The message read from the associated device (output).</td></tr>
+    <tr><td class="paramname">msgLength</td><td>The Message length in bytes (output).</td></tr>
+    <tr><td class="paramname">eca</td><td>The error Check Algorithm used by the packet (output).</td></tr>
+    <tr><td class="paramname">ecd</td><td>The error Check Data of the packet (output).</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no AMASP packet was found.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns a PacketType enumeration (MRP, SRP, SIP, CEP or timeout). If timeout is returned, no valid AMASP packet was found.</dd></dl>
 
 </div>
 </div>
-<a id="ab4c3a6f44617ae9eb74db6979e43394d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4c3a6f44617ae9eb74db6979e43394d">&#9670;&nbsp;</a></span>sendError()</h2>
+<a id="ae44a45a5f93cfa020135a9b3d16a436b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae44a45a5f93cfa020135a9b3d16a436b">&#9670;&nbsp;</a></span>sendError()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void AMASPSerialMaster::sendError </td>
+          <td class="memname">int AMASPSerialMaster::sendError </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>device</em>, </td>
@@ -268,11 +273,12 @@ Public Member Functions</h2></td></tr>
 <p>Send a CEP (Communication Error Packet). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">deviceID</td><td>Device identification. </td></tr>
-    <tr><td class="paramname">errorCode</td><td>The communication error code.</td></tr>
+    <tr><td class="paramname">deviceID</td><td>The device identification (input). </td></tr>
+    <tr><td class="paramname">errorCode</td><td>The communication error code (input).</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns the generated error check data.</dd></dl>
 
 </div>
 </div>
@@ -311,12 +317,13 @@ Public Member Functions</h2></td></tr>
 <p>Send a MRP (Master Request Packet). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">deviceID</td><td>Device identification. </td></tr>
-    <tr><td class="paramname">message</td><td>Message to be send to the associated device.</td></tr>
-    <tr><td class="paramname">msgLength</td><td>Message length in bytes.</td></tr>
+    <tr><td class="paramname">deviceID</td><td>The device identification (input). </td></tr>
+    <tr><td class="paramname">message</td><td>The message to be send to the associated device (input).</td></tr>
+    <tr><td class="paramname">msgLength</td><td>Message length in bytes (input).</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns the generated error check data.</dd></dl>
 
 </div>
 </div>

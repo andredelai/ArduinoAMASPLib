@@ -32,7 +32,7 @@ void setup()
   slave.begin(Serial);
 
   //No error checking
-  slave.SetErrorCheck(none);
+  slave.setErrorCheck(none);
 }
 
 void loop() {

@@ -15,6 +15,7 @@
 AMASPSerialSlave slave;
 int device = 0x00A;
 int codeLength = 0x000;
+int ecd;
 PacketType type;
 ErrorCheck eca;
 byte data[MSGMAXSIZE];
@@ -58,7 +59,7 @@ void loop() {
   //Listening serial interface...
   if (Serial.available() > 0)
   {
-    type = slave.readPacket(device, data, codeLength, eca);
+    type = slave.readPacket(device, data, codeLength, eca, ecd);
     slave.setErrorCheck(eca);
     switch (type)
     {

@@ -66,7 +66,7 @@ void setup() {
   slave.begin(Serial);
   
   //No error checking
-  slave.SetErrorCheck(none);
+  slave.setErrorCheck(none);
 
   pinMode(buttonPin, INPUT);
   pinMode(ledPin, OUTPUT);

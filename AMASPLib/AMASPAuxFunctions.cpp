@@ -1,8 +1,7 @@
 #include "Arduino.h"
 #include "AMASP.h"
 
-#define POLYNOM  0x3D65    // DNP, IEC 870, M-BUS, wM-BUS, ...
-
+//Int to ASCII(hexadecimal) conversion
 void intToASCIIHex(int value, char hex[])
 {
   int i;
@@ -13,6 +12,7 @@ void intToASCIIHex(int value, char hex[])
   }
 }
 
+//ASCII(hexadecimal) to Int convertion 
 long asciiHexToInt(char hex[], int length)
 {
   long num = 0, i;

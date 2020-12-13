@@ -6,12 +6,12 @@ This library implements the AMASP (ASCII Master/Slave Protocol) for Arduino boar
 
 AMASP is an open standard communication protocol that uses four different packet types:
 
-MASTER -> SLAVE:
+MASTER to SLAVE:
 
  MRP - Master Request Packet
  CEP - Communication Error Packet
 
-SLAVE -> MASTER:
+SLAVE to MASTER:
 
  SRP - Slave Response Packet 
  SIP - Slave Interruption Packet
@@ -28,6 +28,8 @@ Do you want to develop an AMASP library to other platforms? Be my guest!
 Author:
 Andre L. Delai
 adelai@gmail.com
+
+Developed in the Renato Archer Information Technology Center (http://www.cti.gov.br) - Brazil.
 
 Documentation about AMASP available here:  https://doi.org/10.14209/jcis.2019.1
 
